@@ -15,7 +15,7 @@ _:
   # Entertainment Tools
 
   # Productivity Tools
-  "raycast"
+  "alfred"
 
   # Browsers
   "chromium"

@@ -22,6 +22,14 @@ let name = "LinuCC";
       }
     ];
     initExtraFirst = ''
+      # gpg-agent for me yubikey
+      unset SSH_AGENT_PID
+      if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+        export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+      fi
+      export GPG_TTY=$(tty)
+      gpg-agent updatestartuptty /bye >/dev/null
+
       if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
         . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
@@ -276,10 +284,13 @@ let name = "LinuCC";
         identitiesOnly = true;
         identityFile = [
           (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-            "/home/${user}/.ssh/id_github"
+	    # Hopefully this doesnt fuck up the secrets handling...
+            # "/home/${user}/.ssh/id_github"
+            "/home/${user}/.ssh/id_rsa_yubikey.pub"
           )
           (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-            "/Users/${user}/.ssh/id_github"
+            # "/Users/${user}/.ssh/id_github"
+            "/Users/${user}/.ssh/id_rsa_yubikey.pub"
           )
         ];
       };
