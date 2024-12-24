@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let name = "LinuCC";
-    user = "pascalernst";
+    user = "linucc";
     email = "linucc@linu.cc"; in
 {
   # Shared shell configuration

@@ -1,6 +1,6 @@
 { agenix, config, pkgs, ... }:
 
-let user = "pascalernst"; in
+let user = "linucc"; in
 
 {
 
