@@ -11,6 +11,7 @@ _:
 
   # Utility Tools
   "bitwarden"
+  "istat-menus"
 
   # Entertainment Tools
 

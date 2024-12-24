@@ -92,5 +92,9 @@ let user = "linucc"; in
         TrackpadThreeFingerDrag = true;
       };
     };
+    keyboard = {
+      enableKeyMapping = true;
+      remapCapsLockToEscape = true;
+    };
   };
 }
