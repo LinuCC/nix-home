@@ -27,8 +27,9 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sum-astro-nvim = {
-      url = "github:sum-rock/SumAstroNvim/master";
+    astro-nvim = {
+      url = "github:LinuCC/dotvim/main";
+      # url = "git+file:///Users/linucc/code/nix/dotvim/";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # secrets = {
@@ -36,7 +37,7 @@
     #   flake = false;
     # };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, sum-astro-nvim } @inputs: # secrets missing
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, astro-nvim } @inputs: # secrets missing
     let
       user = "linucc";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -89,7 +90,7 @@
           modules = [
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
-            sum-astro-nvim.darwinModules.astroNvim
+            astro-nvim.darwinModules.astroNvim
             {
               nix-homebrew = {
                 inherit user;

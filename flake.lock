@@ -21,6 +21,29 @@
         "type": "github"
       }
     },
+    "astro-nvim": {
+      "inputs": {
+        "darwin": "darwin_2",
+        "home-manager": "home-manager_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1735142768,
+        "narHash": "sha256-ypmL8fpGFED6iWpnUDgbmdrANVdeI3xTVgO9O0vkIfE=",
+        "owner": "LinuCC",
+        "repo": "dotvim",
+        "rev": "f6b97986c489db94d3ea8a55e03570890a4f4e40",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LinuCC",
+        "ref": "main",
+        "repo": "dotvim",
+        "type": "github"
+      }
+    },
     "brew-src": {
       "flake": false,
       "locked": {
@@ -63,19 +86,20 @@
     "darwin_2": {
       "inputs": {
         "nixpkgs": [
+          "astro-nvim",
           "nixpkgs"
         ]
       },
       "locked": {
         "lastModified": 1733570843,
         "narHash": "sha256-sQJAxY1TYWD1UyibN/FnN97paTFuwBw3Vp3DNCyKsMk=",
-        "owner": "LnL7",
+        "owner": "lnl7",
         "repo": "nix-darwin",
         "rev": "a35b08d09efda83625bef267eb24347b446c80b8",
         "type": "github"
       },
       "original": {
-        "owner": "LnL7",
+        "owner": "lnl7",
         "ref": "master",
         "repo": "nix-darwin",
         "type": "github"
@@ -84,20 +108,19 @@
     "darwin_3": {
       "inputs": {
         "nixpkgs": [
-          "sum-astro-nvim",
           "nixpkgs"
         ]
       },
       "locked": {
         "lastModified": 1733570843,
         "narHash": "sha256-sQJAxY1TYWD1UyibN/FnN97paTFuwBw3Vp3DNCyKsMk=",
-        "owner": "lnl7",
+        "owner": "LnL7",
         "repo": "nix-darwin",
         "rev": "a35b08d09efda83625bef267eb24347b446c80b8",
         "type": "github"
       },
       "original": {
-        "owner": "lnl7",
+        "owner": "LnL7",
         "ref": "master",
         "repo": "nix-darwin",
         "type": "github"
@@ -164,14 +187,17 @@
     },
     "home-manager_2": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": [
+          "astro-nvim",
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1735053786,
-        "narHash": "sha256-Gm+0DcbUS338vvkwyYWms5jsWlx8z8MeQBzcnIDuIkw=",
+        "lastModified": 1734622215,
+        "narHash": "sha256-OOfI0XhSJGHblfdNDhfnn8QnZxng63rWk9eeJ2tCbiI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "35b98d20ca8f4ca1f6a2c30b8a2c8bb305a36d84",
+        "rev": "1395379a7a36e40f2a76e7b9936cc52950baa1be",
         "type": "github"
       },
       "original": {
@@ -182,17 +208,14 @@
     },
     "home-manager_3": {
       "inputs": {
-        "nixpkgs": [
-          "sum-astro-nvim",
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1734622215,
-        "narHash": "sha256-OOfI0XhSJGHblfdNDhfnn8QnZxng63rWk9eeJ2tCbiI=",
+        "lastModified": 1735053786,
+        "narHash": "sha256-Gm+0DcbUS338vvkwyYWms5jsWlx8z8MeQBzcnIDuIkw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "1395379a7a36e40f2a76e7b9936cc52950baa1be",
+        "rev": "35b98d20ca8f4ca1f6a2c30b8a2c8bb305a36d84",
         "type": "github"
       },
       "original": {
@@ -220,11 +243,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1735053020,
-        "narHash": "sha256-170GlIJtXyWFyUZcI/CLipUHiOuHcsq37xt8B23K28A=",
+        "lastModified": 1735148800,
+        "narHash": "sha256-/F7zpeOwVy2oOv+DrK0TB4cLDNPr6dOk+CMooVlOelA=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "8860dc64781ba78ef1138b23e55c447e234cd937",
+        "rev": "aa99ed034780e405c45e59c8e4c02e272924721d",
         "type": "github"
       },
       "original": {
@@ -236,11 +259,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1735053002,
-        "narHash": "sha256-pB01XqDKVuCAyIfxM7x8AQVa+wOtTB+sVek1sMlPFI4=",
+        "lastModified": 1735149100,
+        "narHash": "sha256-wMA/GevDmu3nOeImWPOje131cb9lro5/Q1PvdMrIxxs=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "38615a161c3c3b46d8ef24bd03d0fb4cdd101c6b",
+        "rev": "a1f2d157ef737b83b31e2888f1fbd94e811f1480",
         "type": "github"
       },
       "original": {
@@ -368,38 +391,15 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
-        "darwin": "darwin_2",
+        "astro-nvim": "astro-nvim",
+        "darwin": "darwin_3",
         "disko": "disko",
-        "home-manager": "home-manager_2",
+        "home-manager": "home-manager_3",
         "homebrew-bundle": "homebrew-bundle",
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
         "nix-homebrew": "nix-homebrew",
-        "nixpkgs": "nixpkgs_5",
-        "sum-astro-nvim": "sum-astro-nvim"
-      }
-    },
-    "sum-astro-nvim": {
-      "inputs": {
-        "darwin": "darwin_3",
-        "home-manager": "home-manager_3",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1734961030,
-        "narHash": "sha256-bnxu3OuH4sFGq2Eaz8hQ3Jy3g1sj5iB7fyGyL/fatww=",
-        "owner": "sum-rock",
-        "repo": "SumAstroNvim",
-        "rev": "b821758942a2f4af59011648d8f63318922225ec",
-        "type": "github"
-      },
-      "original": {
-        "owner": "sum-rock",
-        "ref": "master",
-        "repo": "SumAstroNvim",
-        "type": "github"
+        "nixpkgs": "nixpkgs_5"
       }
     },
     "systems": {

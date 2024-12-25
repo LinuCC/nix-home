@@ -44,7 +44,7 @@ let user = "linucc"; in
     agenix.packages."${pkgs.system}".default
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
 
-  sumAstroNvim = {
+  astroNvim = {
     username = "linucc";
     nerdfont = "Iosevka";
     nodePackage = pkgs.nodejs_20;
@@ -70,6 +70,7 @@ let user = "linucc"; in
       NSGlobalDomain = {
         AppleShowAllExtensions = true;
         ApplePressAndHoldEnabled = false;
+        AppleInterfaceStyle = "Dark";
 
         # 120, 90, 60, 30, 12, 6, 2
         KeyRepeat = 2;
@@ -92,11 +93,14 @@ let user = "linucc"; in
 
       finder = {
         _FXShowPosixPathInTitle = false;
+        FXPreferredViewStyle = "clmv";
       };
+
+      loginwindow.GuestEnabled = false;
 
       trackpad = {
         Clicking = true;
-        TrackpadThreeFingerDrag = true;
+        TrackpadThreeFingerDrag = false;
       };
     };
     keyboard = {

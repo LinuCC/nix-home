@@ -208,7 +208,7 @@ let name = "LinuCC";
     enable = true;
     settings = {
       env = {
-        # TERM = "xterm-256color";
+        TERM = "xterm-256color";
       };
 
       window = {
@@ -328,10 +328,10 @@ let name = "LinuCC";
           cyan = "#6d96a5";
           white = "#aeb3bb";
         };
+        transparent_background_colors = true;
       };
     };
   };
-
 
   ssh = {
     enable = true;
