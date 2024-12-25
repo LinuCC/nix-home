@@ -207,67 +207,131 @@ let name = "LinuCC";
   alacritty = {
     enable = true;
     settings = {
-      cursor = {
-        style = "Block";
+      env = {
+        # TERM = "xterm-256color";
       };
 
       window = {
-        opacity = 1.0;
-        padding = {
-          x = 24;
-          y = 24;
+        dynamic_title = true;
+        opacity = 0.9;
+
+        dimensions = {
+          columns = 80;
+          lines = 24;
         };
+
+        padding = {
+          x = 0;
+          y = 0;
+        };
+
+        decorations = "none";
+
+      };
+
+      scrolling = {
+        history = 10000;
+        multiplier = 3;
       };
 
       font = {
         normal = {
-          family = "MesloLGS NF";
+          family = "Iosevka Nerd Font";
           style = "Regular";
         };
+        bold = {
+          family = "Iosevka Nerd Font";
+          style = "Medium";
+        };
+        italic = {
+          family = "Iosevka Nerd Font";
+          style = "Italic";
+        };
         size = lib.mkMerge [
-          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux 10)
-          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin 14)
+          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux 12)
+          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin 13)
         ];
       };
 
-      dynamic_padding = true;
-      decorations = "full";
-      title = "Terminal";
-      class = {
-        instance = "Alacritty";
-        general = "Alacritty";
+      bell = {
+        animation = "EaseOutExpo";
+        duration = 0;
       };
 
+      cursor = {
+        style = "Block";
+        unfocused_hollow = true;
+      };
+
+      terminal = {
+        shell = {
+          program = "/bin/zsh";
+          args = [ "--login"];
+        };
+      };
+      
       colors = {
         primary = {
-          background = "0x1f2528";
-          foreground = "0xc0c5ce";
+          background = "#2e3440";
+          foreground = "#d8dee9";
+          dim_foreground = "#a5abb6";
         };
-
+        cursor = {
+          text = "#2e3440";
+          cursor = "#d8dee9";
+        };
+        vi_mode_cursor = {
+          text = "#2e3440";
+          cursor = "#d8dee9";
+        };
+        selection = {
+          text = "CellForeground";
+          background = "#4c566a";
+        };
+        search = {
+          matches = {
+            foreground = "CellBackground";
+            background = "#88c0d0";
+          };
+          # bar = {
+          #   background = "#434c5e";
+          #   foreground = "#d8dee9";
+          # };
+        };
         normal = {
-          black = "0x1f2528";
-          red = "0xec5f67";
-          green = "0x99c794";
-          yellow = "0xfac863";
-          blue = "0x6699cc";
-          magenta = "0xc594c5";
-          cyan = "0x5fb3b3";
-          white = "0xc0c5ce";
+          black = "#3b4252";
+          red = "#bf616a";
+          green = "#a3be8c";
+          yellow = "#ebcb8b";
+          blue = "#81a1c1";
+          magenta = "#b48ead";
+          cyan = "#88c0d0";
+          white = "#e5e9f0";
         };
-
         bright = {
-          black = "0x65737e";
-          red = "0xec5f67";
-          green = "0x99c794";
-          yellow = "0xfac863";
-          blue = "0x6699cc";
-          magenta = "0xc594c5";
-          cyan = "0x5fb3b3";
-          white = "0xd8dee9";
+          black = "#4c566a";
+          red = "#bf616a";
+          green = "#a3be8c";
+          yellow = "#ebcb8b";
+          blue = "#81a1c1";
+          magenta = "#b48ead";
+          cyan = "#8fbcbb";
+          white = "#eceff4";
+        };
+        dim = {
+          black = "#373e4d";
+          red = "#94545d";
+          green = "#809575";
+          yellow = "#b29e75";
+          blue = "#68809a";
+          magenta = "#8c738c";
+          cyan = "#6d96a5";
+          white = "#aeb3bb";
         };
       };
     };
   };
+
 
   ssh = {
     enable = true;

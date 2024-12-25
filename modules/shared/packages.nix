@@ -33,7 +33,7 @@ with pkgs; [
   ffmpeg
   fd
   font-awesome
-  iosevka
+  pkgs.nerd-fonts.iosevka
   hack-font
   noto-fonts
   noto-fonts-emoji
@@ -50,6 +50,7 @@ with pkgs; [
   iftop
   jetbrains-mono
   jq
+  neovim
   ripgrep
   tree
   tmux

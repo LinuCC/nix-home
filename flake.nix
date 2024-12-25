@@ -27,12 +27,16 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    secrets = {
-      url = "git+ssh://git@github.com/linucc/nix-secrets.git";
-      flake = false;
+    sum-astro-nvim = {
+      url = "github:sum-rock/SumAstroNvim/master";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
+    # secrets = {
+    #   url = "git+ssh://git@github.com/linucc/nix-secrets.git";
+    #   flake = false;
+    # };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, secrets } @inputs:
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, sum-astro-nvim } @inputs: # secrets missing
     let
       user = "linucc";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -62,7 +66,7 @@
         "create-keys" = mkApp "create-keys" system;
         "check-keys" = mkApp "check-keys" system;
         "install" = mkApp "install" system;
-        "install-with-secrets" = mkApp "install-with-secrets" system;
+        # "install-with-secrets" = mkApp "install-with-secrets" system;
       };
       mkDarwinApps = system: {
         "apply" = mkApp "apply" system;
@@ -85,6 +89,7 @@
           modules = [
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
+            sum-astro-nvim.darwinModules.astroNvim
             {
               nix-homebrew = {
                 inherit user;

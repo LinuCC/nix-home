@@ -11,12 +11,12 @@ _:
 
   # Utility Tools
   "bitwarden"
+  "alfred"
   "istat-menus"
 
   # Entertainment Tools
 
   # Productivity Tools
-  "alfred"
 
   # Browsers
   "chromium"

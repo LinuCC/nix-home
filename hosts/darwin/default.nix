@@ -44,6 +44,13 @@ let user = "linucc"; in
     agenix.packages."${pkgs.system}".default
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
 
+  sumAstroNvim = {
+    username = "linucc";
+    nerdfont = "Iosevka";
+    nodePackage = pkgs.nodejs_20;
+    pythonPackage = pkgs.python311Full;
+  };
+
   # launchd.user.agents.emacs.path = [ config.environment.systemPath ];
   # launchd.user.agents.emacs.serviceConfig = {
   #   KeepAlive = true;
