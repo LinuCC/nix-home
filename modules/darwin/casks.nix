@@ -15,6 +15,7 @@ _:
   "istat-menus"
 
   # Entertainment Tools
+  "font-sketchybar-app-font"
 
   # Productivity Tools
 

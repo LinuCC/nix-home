@@ -7,7 +7,7 @@ let
   #   #!/bin/sh
   #   emacsclient -c -n &
   # '';
-  sharedFiles = import ../shared/files.nix { inherit config pkgs; };
+  sharedFiles = import ../shared/files.nix { inherit config pkgs user; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
 in
 {
@@ -44,7 +44,7 @@ in
     masApps = {
       # "1password" = 1333542190;
       "wireguard" = 1451685025;
-      "magnet" = 441258766;
+      # "magnet" = 441258766;
     };
   };
 

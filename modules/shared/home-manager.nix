@@ -333,6 +333,11 @@ let name = "LinuCC";
     };
   };
 
+  nushell = {
+    enable = true;
+    # configFile.source = ./config/nu/config.nu;
+  };
+
   ssh = {
     enable = true;
     includes = [
