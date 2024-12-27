@@ -33,7 +33,8 @@ with pkgs; [
   ffmpeg
   fd
   font-awesome
-  pkgs.nerd-fonts.iosevka
+  nerd-fonts.iosevka
+  nerd-fonts.mplus
   hack-font
   noto-fonts
   noto-fonts-emoji
@@ -60,4 +61,7 @@ with pkgs; [
   # Python packages
   python3
   virtualenv
+
+  # Music and entertainment
+  spotify
 ]

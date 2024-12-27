@@ -2,7 +2,8 @@
 
 let name = "LinuCC";
     user = "linucc";
-    email = "linucc@linu.cc"; in
+    email = "linucc@linu.cc"; 
+in
 {
   # Shared shell configuration
   zsh = {
@@ -92,6 +93,10 @@ let name = "LinuCC";
       pull.rebase = true;
       rebase.autoStash = true;
     };
+  };
+
+  mise = {
+    enable = true;
   };
 
   vim = {
@@ -236,15 +241,18 @@ let name = "LinuCC";
 
       font = {
         normal = {
-          family = "Iosevka Nerd Font";
+          # family = "Iosevka Nerd Font";
+          family = "M+1Code Nerd Font";
           style = "Regular";
         };
         bold = {
-          family = "Iosevka Nerd Font";
+          # family = "Iosevka Nerd Font";
+          family = "M+1Code Nerd Font";
           style = "Medium";
         };
         italic = {
-          family = "Iosevka Nerd Font";
+          # family = "Iosevka Nerd Font";
+          family = "M+1Code Nerd Font";
           style = "Italic";
         };
         size = lib.mkMerge [
@@ -293,10 +301,6 @@ let name = "LinuCC";
             foreground = "CellBackground";
             background = "#88c0d0";
           };
-          # bar = {
-          #   background = "#434c5e";
-          #   foreground = "#d8dee9";
-          # };
         };
         normal = {
           black = "#3b4252";
@@ -335,8 +339,245 @@ let name = "LinuCC";
 
   nushell = {
     enable = true;
-    # configFile.source = ./config/nu/config.nu;
+    configFile.source = ./config/nu/config.nu;
+    extraConfig = ''
+       let carapace_completer = {|spans|
+       carapace $spans.0 nushell $spans | from json
+       }
+       $env.config = {
+        show_banner: false,
+        completions: {
+        case_sensitive: false # case-sensitive completions
+        quick: true    # set to false to prevent auto-selecting completions
+        partial: true    # set to false to prevent partial filling of the prompt
+        algorithm: "fuzzy"    # prefix or fuzzy
+        external: {
+        # set to false to prevent nushell looking into $env.PATH to find more suggestions
+            enable: true 
+        # set to lower can improve completion performance at the cost of omitting some options
+            max_results: 100 
+            completer: $carapace_completer # check 'carapace_completer' 
+          }
+        }
+       } 
+       $env.PATH = ($env.PATH | 
+       split row (char esep) |
+       prepend /home/myuser/.apps |
+       append /usr/bin/env
+       )
+      '' + ''
+        export-env {
+          $env.MISE_SHELL = "nu"
+          
+          $env.config = ($env.config | upsert hooks {
+              pre_prompt: ($env.config.hooks.pre_prompt ++
+              [{
+              condition: {|| "MISE_SHELL" in $env }
+              code: {|| mise_hook }
+              }])
+              env_change: {
+                  PWD: ($env.config.hooks.env_change.PWD ++
+                  [{
+                  condition: {|| "MISE_SHELL" in $env }
+                  code: {|| mise_hook }
+                  }])
+              }
+          })
+        }
+          
+        def "parse vars" [] {
+          $in | lines | parse "{op},{name},{value}"
+        }
+          
+        def --env mise [command?: string, --help, ...rest: string] {
+          let commands = ["shell", "deactivate"]
+          
+          if ($command == null) {
+            ^"${pkgs.mise}/bin/mise"
+          } else if ($command == "activate") {
+            $env.MISE_SHELL = "nu"
+          } else if ($command in $commands) {
+            ^"${pkgs.mise}/bin/mise" $command $rest
+            | parse vars
+            | update-env
+          } else {
+            ^"${pkgs.mise}/bin/mise" $command ...$rest
+          }
+        }
+          
+        def --env "update-env" [] {
+          for $var in $in {
+            if $var.op == "set" {
+              load-env {($var.name): $var.value}
+            } else if $var.op == "hide" {
+              hide-env $var.name
+            }
+          }
+        }
+          
+        def --env mise_hook [] {
+          ^"${pkgs.mise}/bin/mise" hook-env -s nu
+            | parse vars
+            | update-env
+        }
+      '';
+    envFile.source = ./config/nu/env.nu;
   };
+
+  carapace = {
+    enable = true;
+    enableNushellIntegration = true;
+  };
+
+  starship = { 
+    enable = true;
+
+    # TODO: Replace p10k with starship
+    enableZshIntegration = false;
+    enableBashIntegration = false;
+    enableFishIntegration = false;
+
+    settings = {
+      add_newline = true;
+
+   format = ''[](#5E81AC)$os$username[](bg:#81A1C1 fg:#5E81AC)$directory[](fg:#81A1C1 bg:#88C0D0)$git_branch$git_status[](fg:#88C0D0 bg:#8FBCBB)$c$elixir$elm$golang$gradle$haskell$java$julia$nodejs$nim$rust$scala[](fg:#8FBCBB bg:#A3BE8C)$docker_context[](fg:#A3BE8C)'';
+
+    right_format = ''[](fg:#EBCB8B)$time[](fg:#EBCB8B)'';
+ 
+   username = {
+     show_always = true;
+     style_user = "bg:#5E81AC";
+     style_root = "bg:#5E81AC";
+     format = "[$user ]($style)";
+     disabled = false;
+   };
+ 
+   os = {
+     style = "bg:#5E81AC fg:#2E3440";
+     # disabled = true; # Disabled by default
+   };
+ 
+   directory = {
+     style = "bg:#81A1C1 fg:#2E3440";
+     format = "[ $path ]($style)";
+     truncation_length = 3;
+     truncation_symbol = "…/";
+     substitutions = {
+       "Documents" = "󰈙 ";
+       "Downloads" = " ";
+       "Music" = " ";
+       "Pictures" = " ";
+     };
+   };
+ 
+   c = {
+     symbol = " ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   docker_context = {
+     symbol = " ";
+     style = "bg:#A3BE8C fg:#2E3440";
+     format = "[ $symbol $context ]($style)";
+   };
+ 
+   elixir = {
+     symbol = " ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   elm = {
+     symbol = " ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   git_branch = {
+     symbol = "";
+     style = "bg:#88C0D0 fg:#2E3440";
+     format = "[ $symbol $branch ]($style)";
+   };
+ 
+   git_status = {
+     style = "bg:#88C0D0 fg:#2E3440";
+     format = "[$all_status$ahead_behind ]($style)";
+   };
+ 
+   golang = {
+     symbol = " ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   gradle = {
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   haskell = {
+     symbol = " ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   java = {
+     symbol = " ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   julia = {
+     symbol = " ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   nodejs = {
+     symbol = "";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   nim = {
+     symbol = "󰆥 ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+      
+   nix-shell = {
+     symbol = "󱄅 ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol  $name ($state) ]($style)";
+   };
+ 
+   rust = {
+     symbol = "";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+ 
+   scala = {
+     symbol = " ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol ($version) ]($style)";
+   };
+
+   terraform = {
+     symbol = " ";
+     style = "bg:#8FBCBB fg:#2E3440";
+     format = "[ $symbol $workspace ($version) ]($style)";
+   };
+ 
+   time = {
+     disabled = false;
+     time_format = "%R"; # Hour:Minute Format
+     style = "bg:#EBCB8B fg:#2E3440";
+     format = "[ 󱑏 $time ]($style)";
+   };
+     };
+   };
 
   ssh = {
     enable = true;

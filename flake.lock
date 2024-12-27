@@ -30,11 +30,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1735142768,
-        "narHash": "sha256-ypmL8fpGFED6iWpnUDgbmdrANVdeI3xTVgO9O0vkIfE=",
+        "lastModified": 1735265179,
+        "narHash": "sha256-tihKBf0JLlpNB9qOQw1X8+nD/oQm81ZdodZ3orY+2Zo=",
         "owner": "LinuCC",
         "repo": "dotvim",
-        "rev": "f6b97986c489db94d3ea8a55e03570890a4f4e40",
+        "rev": "159d7ea0c41625edd1867f6348d997ec75390be6",
         "type": "github"
       },
       "original": {

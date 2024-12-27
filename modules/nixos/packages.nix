@@ -61,7 +61,4 @@ shared-packages ++ [
 
   # PDF viewer
   zathura
-
-  # Music and entertainment
-  spotify
 ]
