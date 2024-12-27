@@ -18,10 +18,13 @@ want to lose your existing packages.
 
 ## Todos
 
-- [ ] Template configuration for
-  - [ ] NuShell
+- [x] Template configuration for
+  - [x] NuShell
   - [x] Neovim
-  - [ ] Tmux
+  - [x] Tmux
+- [ ] Cleanup config in
+  - `shared/home-manager.nix`
+  - `hosts/darwin/default.nix`
   - Mac-specific (probably infeasable amount of work)
     - [ ] Alfred
     - [ ] iStat Menus
