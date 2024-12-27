@@ -8,19 +8,7 @@ in
   # Shared shell configuration
   zsh = {
     enable = true;
-    autocd = false;
-    cdpath = [ "~/.local/share/src" ];
     plugins = [
-      {
-          name = "powerlevel10k";
-          src = pkgs.zsh-powerlevel10k;
-          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
-      }
-      {
-          name = "powerlevel10k-config";
-          src = lib.cleanSource ./config;
-          file = "p10k.zsh";
-      }
     ];
     initExtraFirst = ''
       # gpg-agent for me yubikey
@@ -47,16 +35,7 @@ in
       # Ripgrep alias
       alias search=rg -p --glob '!node_modules/*'  $@
 
-      # Emacs is my editor
-      # export ALTERNATE_EDITOR=""
-      # export EDITOR="emacsclient -t"
-      # export VISUAL="emacsclient -c -a emacs"
-
       export EDITOR="nvim"
-
-      # e() {
-      #     emacsclient -t "$@"
-      # }
 
       # nix shortcuts
       shell() {
@@ -231,7 +210,6 @@ in
         };
 
         decorations = "none";
-
       };
 
       scrolling = {
@@ -432,15 +410,10 @@ in
   starship = { 
     enable = true;
 
-    # TODO: Replace p10k with starship
-    enableZshIntegration = false;
-    enableBashIntegration = false;
-    enableFishIntegration = false;
-
     settings = {
       add_newline = true;
 
-   format = ''[](#5E81AC)$os$username[](bg:#81A1C1 fg:#5E81AC)$directory[](fg:#81A1C1 bg:#88C0D0)$git_branch$git_status[](fg:#88C0D0 bg:#8FBCBB)$c$elixir$elm$golang$gradle$haskell$java$julia$nodejs$nim$rust$scala[](fg:#8FBCBB bg:#A3BE8C)$docker_context[](fg:#A3BE8C)'';
+   format = ''$shell[](#5E81AC)$os$username[](bg:#81A1C1 fg:#5E81AC)$directory[](fg:#81A1C1 bg:#88C0D0)$git_branch$git_status[](fg:#88C0D0 bg:#8FBCBB)$c$elixir$elm$golang$gradle$haskell$java$julia$nodejs$nim$rust$scala[](fg:#8FBCBB bg:#A3BE8C)$docker_context[](fg:#A3BE8C) '';
 
     right_format = ''[](fg:#EBCB8B)$time[](fg:#EBCB8B)'';
  
@@ -546,7 +519,7 @@ in
      format = "[ $symbol ($version) ]($style)";
    };
       
-   nix-shell = {
+   nix_shell = {
      symbol = "󱄅 ";
      style = "bg:#8FBCBB fg:#2E3440";
      format = "[ $symbol  $name ($state) ]($style)";
@@ -562,6 +535,15 @@ in
      symbol = " ";
      style = "bg:#8FBCBB fg:#2E3440";
      format = "[ $symbol ($version) ]($style)";
+   };
+
+   shell = {
+      disabled = false;
+      # style = "bg:#B48EAD fg:#2E3440";
+      bash_indicator = "[   bsh ](fg:#ebcb8b)";
+      zsh_indicator = "[   zsh ](fg:#a3be8c)";
+      nu_indicator = "[   nu ](fg:#b48ead)";
+      format = "$indicator";
    };
 
    terraform = {

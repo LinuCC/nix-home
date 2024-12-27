@@ -599,13 +599,9 @@ let
   sketchybar-plugin-wifi = pkgs.writeScript "sketchybar-plugin-wifi.sh" ''
     #!/usr/bin/env sh
 
-    LABEL="$(networksetup -listallhardwareports | awk '/Wi-Fi/{getline; print $2}' | xargs networksetup -getairportnetwork)"
-
-    if [[ "$LABEL" == *"You are not associated with an AirPort network."* ]]; then
-      sketchybar --set wifi label="Disconnected"
-    else   LABEL=$(echo "$LABEL" | sed "s/Current Wi-Fi Network: //")
-      sketchybar --set wifi label="$LABEL"
-    fi
+    LABEL="$(networksetup -listallhardwareports | awk '/Wi-Fi/{getline; print $2}')"
+    LABEL=$(echo "$LABEL" | sed "s/Current Wi-Fi Network: //")
+    sketchybar --set wifi label="$LABEL"
   '';
 
   sketchybar-item-apple = pkgs.writeScript "sketchybar-item-apple.sh" ''
