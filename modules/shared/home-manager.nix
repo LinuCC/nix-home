@@ -594,7 +594,8 @@ in
     plugins = with pkgs.tmuxPlugins; [
       vim-tmux-navigator
       fingers
-      sensible
+      # https://github.com/nix-community/home-manager/issues/5952
+      # sensible
       yank
       prefix-highlight
       nord
@@ -621,9 +622,12 @@ in
     tmuxinator.enable = true;
     prefix = "C-b";
     escapeTime = 10;
+    clock24 = true;
     historyLimit = 50000;
     shell = "${pkgs.nushell}/bin/nu";
+    sensibleOnTop = false;
     extraConfig = ''
+
       # Remove Vim mode delays
       set -g focus-events on
 
@@ -666,6 +670,10 @@ in
       bind-key -T copy-mode-vi 'C-k' select-pane -U
       bind-key -T copy-mode-vi 'C-l' select-pane -R
       bind-key -T copy-mode-vi 'C-\' select-pane -l
+
+      # Some BS around https://github.com/nix-community/home-manager/issues/5952
+      set -gu default-command
+      set -g default-shell "${pkgs.nushell}/bin/nu"
       '';
     };
 }
