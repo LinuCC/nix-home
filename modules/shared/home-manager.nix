@@ -676,7 +676,7 @@ in
       set -gu default-command
       set -g default-shell "${pkgs.nushell}/bin/nu"
 
-      # set -g default-terminal "tmux-256color"
+      # Colored Nvim inside Tmux
       set -ag terminal-overrides ",xterm-256color:RGB"
       '';
     };

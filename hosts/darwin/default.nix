@@ -145,7 +145,7 @@ let
       "VMware Fusion")
         icon_result=":vmware_fusion:"
         ;;
-      "Alacritty" | "Hyper" | "iTerm2" | "kitty" | "Terminal" | "终端" | "WezTerm")
+      "Alacritty" | "Hyper" | "iTerm2" | "kitty" | "Terminal" | "Ghostty" | "WezTerm")
         icon_result=":terminal:"
         ;;
       "Microsoft To Do" | "Things")
