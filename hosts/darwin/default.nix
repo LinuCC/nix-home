@@ -792,6 +792,11 @@ in
         "echo $(env) >> /tmp/aerospace.log; ${pkgs.sketchybar}/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=\"space.$AEROSPACE_FOCUSED_WORKSPACE\""
       ];
       workspace-to-monitor-force-assignment = {
+        # Assumes the following monitor layout:
+        # 1 - the inbuild mac laptop screen left of the big screen
+        # 2 - the big screen
+        # 3 - the iPad underneith the big screen
+        # main - stationary: big screen; on the move: inbuild laptop screen
         "1" = "main";
         "2" = "main";
         "3" = "main";
@@ -802,11 +807,13 @@ in
         "8" = 1;
         "9" = 1;
         "10" = 1;
-        "A" = 3;
-        "B" = 3;
-        "C" = 3;
-        "D" = 3;
+        "Q" = 3;
+        "W" = 3;
         "E" = 3;
+        "R" = 3;
+        "T" = 3;
+        "Y" = 3;
+        "U" = 3;
       };
       mode.main.binding = {
         alt-slash = "layout tiles horizontal vertical";
@@ -832,11 +839,13 @@ in
         alt-8 = "workspace 8";
         alt-9 = "workspace 9";
         alt-0 = "workspace 10";
-        alt-a = "workspace A";
-        alt-b = "workspace B";
-        alt-c = "workspace C";
-        alt-d = "workspace D";
+        alt-q = "workspace Q";
+        alt-w = "workspace W";
         alt-e = "workspace E";
+        alt-r = "workspace R";
+        alt-t = "workspace T";
+        alt-y = "workspace Y";
+        alt-u = "workspace U";
         # alt-f = "workspace F";
         # alt-g = "workspace G";
         # alt-i = "workspace I";
@@ -866,11 +875,18 @@ in
         alt-shift-8 = "move-node-to-workspace 8";
         alt-shift-9 = "move-node-to-workspace 9";
         alt-shift-0 = "move-node-to-workspace 10";
-        alt-shift-a = "move-node-to-workspace A";
-        alt-shift-b = "move-node-to-workspace B";
-        alt-shift-c = "move-node-to-workspace C";
-        alt-shift-d = "move-node-to-workspace D";
+        alt-shift-q = "move-node-to-workspace Q";
+        alt-shift-w = "move-node-to-workspace W";
         alt-shift-e = "move-node-to-workspace E";
+        alt-shift-r = "move-node-to-workspace R";
+        alt-shift-t = "move-node-to-workspace T";
+        alt-shift-y = "move-node-to-workspace Y";
+        alt-shift-u = "move-node-to-workspace U";
+        # alt-shift-a = "move-node-to-workspace A";
+        # alt-shift-b = "move-node-to-workspace B";
+        # alt-shift-c = "move-node-to-workspace C";
+        # alt-shift-d = "move-node-to-workspace D";
+        # alt-shift-e = "move-node-to-workspace E";
         # alt-shift-f = "move-node-to-workspace F";
         # alt-shift-g = "move-node-to-workspace G";
         # alt-shift-i = "move-node-to-workspace I";
@@ -990,7 +1006,10 @@ sketchybar --update
     settings = {
       trusted-users = [ "@admin" "${user}" ];
       substituters = [ "https://nix-community.cachix.org" "https://cache.nixos.org" ];
-      trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
+      trusted-public-keys = [ 
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
     };
 
     gc = {
