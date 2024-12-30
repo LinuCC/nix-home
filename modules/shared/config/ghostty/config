@@ -1,0 +1,16 @@
+gtk-tabs-location = hidden
+font-family = "Iosevka"
+theme = terafox
+font-size = 14
+scrollback-limit = 10_000
+window-theme = ghostty
+clipboard-read = allow
+clipboard-paste-protection = false
+window-decoration = false
+shell-integration = zsh
+macos-titlebar-style = hidden
+font-thicken = true
+
+# Transparency
+background-opacity = 0.9
+background-blur-radius = 10

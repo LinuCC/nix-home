@@ -15,26 +15,48 @@ let
   sketchybar-colors = pkgs.writeScript "sketchybar-colors.sh" ''
     #!/bin/bash
 
-    export ROSEWATER=0xFF2E3440 #2E3440
-    export FLAMINGO=0xFF3B4252 #3B4252
-    export PINK=0xFF434C5E #434C5E
-    export MAUVE=0xFF4C566A #4C566A
-    export RED=0xFFBF616A #BF616A
-    export MAROON=0xFFD08770 #D08770
-    export PEACH=0xFFEBCB8B #EBCB8B
-    export YELLOW=0xFFA3BE8C #A3BE8C
-    export GREEN=0xFF8FBCBB #8FBCBB
-    export TEAL=0xFF88C0D0 #88C0D0
-    export SKY=0xFF81A1C1 #81A1C1
-    export SAPPHIRE=0xFF5E81AC #5E81AC
-    export BLUE=0xFFD8DEE9 #D8DEE9
-    export LAVENDER=0xFFB48EAD #B48EAD
+    # Nord
+    # export ROSEWATER=0xFF2E3440 #2E3440
+    # export FLAMINGO=0xFF3B4252 #3B4252
+    # export PINK=0xFF434C5E #434C5E
+    # export MAUVE=0xFF4C566A #4C566A
+    # export RED=0xFFBF616A #BF616A
+    # export MAROON=0xFFD08770 #D08770
+    # export PEACH=0xFFEBCB8B #EBCB8B
+    # export YELLOW=0xFFA3BE8C #A3BE8C
+    # export GREEN=0xFF8FBCBB #8FBCBB
+    # export TEAL=0xFF88C0D0 #88C0D0
+    # export SKY=0xFF81A1C1 #81A1C1
+    # export SAPPHIRE=0xFF5E81AC #5E81AC
+    # export BLUE=0xFFD8DEE9 #D8DEE9
+    # export LAVENDER=0xFFB48EAD #B48EAD
 
-    export WHITE=0xFFECEFF4 #ECEFF4
-    export DARK_WHITE=0xFFE5E9F0 #E5E9F0
+    # export WHITE=0xFFECEFF4 #ECEFF4
+    # export DARK_WHITE=0xFFE5E9F0 #E5E9F0
 
-    export BG_PRI_COLR=0xFF2E3440 #2E3440
-    export BG_SEC_COLR=0xFF3B4252 #3B4252
+    # export BG_PRI_COLR=0xFF2E3440 #2E3440
+    # export BG_SEC_COLR=0xFF3B4252 #3B4252
+
+    export ROSEWATER=0xFF2F3239 #2F3239
+    export FLAMINGO=0xFF4e5157 #4e5157
+    export PINK=0xFFcb7985 #cb7985
+    export MAUVE=0xFFd38d97 #d38d97
+    export RED=0xFFe85c51 #e85c51
+    export MAROON=0xFFeb746b #eb746b
+    export PEACH=0xFFff8349 #ff8349
+    export YELLOW=0xFFfda47f #fda47f
+    export GREEN=0xFF7aa4a1 #7aa4a1
+    export TEAL=0xFF8eb2af #8eb2af
+    export SKY=0xFF5a93aa #4d7d90
+    export SAPPHIRE=0xFF73a3b7 #73a3b7
+    export BLUE=0xFFebebeb #5a93aa
+    export LAVENDER=0xFFad5c7c #ad5c7c
+    
+    export WHITE=0xFFeeeeee #eeeeee
+    export DARK_WHITE=0xFFc8c8c8 #c8c8c8
+    
+    export BG_PRI_COLR=0xFF0f1c1e #0f1c1e
+    export BG_SEC_COLR=0xFF152528 #152528
   '';
 
   sketchybar-icons = pkgs.writeScript "sketchybar-icons.sh" ''
@@ -918,11 +940,12 @@ in
 
   services.jankyborders = {
     enable = true;
-    width = 5.0;
-    active_color = "#FF81A1C1";
-    inactive_color = "#FF2E3440";
+    width = 3.0;
+    active_color = "0xFFff8349";
+    inactive_color = "0xFFad5c7c";
     hidpi = true;
-    style = "square";
+    style = "rounded";
+    order = "above"; # https://github.com/FelixKratz/JankyBorders/issues/37
   };
 
   services.sketchybar = {

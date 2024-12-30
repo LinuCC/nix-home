@@ -7,6 +7,10 @@ let
   xdg_configHome = "${config.users.users.${user}.home}/.config"; in
 {
 
+  "${xdg_configHome}/ghostty/config" = {
+    source = ./config/ghostty/config;
+    recursive = true;
+  };
   # "${xdg_configHome}/nu/completions/git-completions.nu" = {
   #   text = builtins.readFile ./config/nu/git-completions.nu;
   # };

@@ -79,7 +79,8 @@ in
         { path = "/Applications/Slack.app/"; }
         # { path = "/System/Applications/Messages.app/"; }
         # { path = "/System/Applications/Facetime.app/"; }
-        { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
+        # { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
+        { path = "${config.users.users.${user}.home}/Applications/Ghostty.app/"; }
         # { path = "/System/Applications/Music.app/"; }
         # { path = "/System/Applications/News.app/"; }
         { path = "/System/Applications/Photos.app/"; }
