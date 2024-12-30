@@ -618,7 +618,7 @@ in
       #   '';
       # }
     ];
-    terminal = "xterm-256color";
+    terminal = "tmux-256color";
     tmuxinator.enable = true;
     prefix = "C-b";
     escapeTime = 10;
@@ -626,6 +626,7 @@ in
     historyLimit = 50000;
     shell = "${pkgs.nushell}/bin/nu";
     sensibleOnTop = false;
+    baseIndex = 1;
     extraConfig = ''
 
       # Remove Vim mode delays
@@ -674,6 +675,9 @@ in
       # Some BS around https://github.com/nix-community/home-manager/issues/5952
       set -gu default-command
       set -g default-shell "${pkgs.nushell}/bin/nu"
+
+      # set -g default-terminal "tmux-256color"
+      set -ag terminal-overrides ",xterm-256color:RGB"
       '';
     };
 }
