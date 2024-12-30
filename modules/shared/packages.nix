@@ -9,6 +9,7 @@ with pkgs; [
   bat
   btop
   coreutils
+  # ghostty - not building, using cask for now
   killall
   neofetch
   nushell
@@ -35,6 +36,7 @@ with pkgs; [
   font-awesome
   nerd-fonts.iosevka
   nerd-fonts.mplus
+  iosevka
   hack-font
   noto-fonts
   noto-fonts-emoji
@@ -52,6 +54,7 @@ with pkgs; [
   jetbrains-mono
   jq
   neovim
+  obsidian
   ripgrep
   tree
   tmux
