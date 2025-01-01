@@ -835,7 +835,7 @@ in
         "R" = 3;
         "T" = 3;
         "Y" = 3;
-        "U" = 3;
+        "P" = 3;
       };
       mode.main.binding = {
         alt-slash = "layout tiles horizontal vertical";
@@ -867,7 +867,7 @@ in
         alt-r = "workspace R";
         alt-t = "workspace T";
         alt-y = "workspace Y";
-        alt-u = "workspace U";
+        alt-p = "workspace P";
         # alt-f = "workspace F";
         # alt-g = "workspace G";
         # alt-i = "workspace I";
@@ -903,7 +903,7 @@ in
         alt-shift-r = "move-node-to-workspace R";
         alt-shift-t = "move-node-to-workspace T";
         alt-shift-y = "move-node-to-workspace Y";
-        alt-shift-u = "move-node-to-workspace U";
+        alt-shift-p = "move-node-to-workspace P";
         # alt-shift-a = "move-node-to-workspace A";
         # alt-shift-b = "move-node-to-workspace B";
         # alt-shift-c = "move-node-to-workspace C";

@@ -22,6 +22,8 @@ want to lose your existing packages.
   - [x] NuShell
   - [x] Neovim
   - [x] Tmux
+- [ ] Auto-start aerospace
+- [ ] Ensure Sketchybar started with Aerospace
 - [ ] Cleanup config in
   - `shared/home-manager.nix`
   - `hosts/darwin/default.nix`
