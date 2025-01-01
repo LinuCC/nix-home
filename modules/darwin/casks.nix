@@ -10,6 +10,7 @@ _:
   # Communication Tools
   "discord"
   "slack"
+  "microsoft-teams"
 
   # Utility Tools
   "bitwarden"
