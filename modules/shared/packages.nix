@@ -27,6 +27,7 @@ with pkgs; [
   # Cloud-related tools and SDKs
   docker
   docker-compose
+  colima
 
   # Media-related packages
   # emacs-all-the-icons-fonts
