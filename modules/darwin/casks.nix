@@ -15,6 +15,7 @@ _:
   "bitwarden"
   "alfred"
   "istat-menus"
+  "proton-mail-bridge"
 
   # Entertainment Tools
   "font-sketchybar-app-font"
