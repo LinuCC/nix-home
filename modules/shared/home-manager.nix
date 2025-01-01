@@ -398,6 +398,16 @@ in
             | parse vars
             | update-env
         }
+      '' + ''
+        # Direnv setup
+
+        { ||
+            if (which direnv | is-empty) {
+                return
+            }
+
+            direnv export json | from json | default {} | load-env
+        }
       '';
     envFile.source = ./config/nu/env.nu;
   };
@@ -405,6 +415,12 @@ in
   carapace = {
     enable = true;
     enableNushellIntegration = true;
+  };
+
+  direnv = {
+    enable = true;
+    enableBashIntegration = true; # see note on other shells below
+    nix-direnv.enable = true;
   };
 
   starship = { 

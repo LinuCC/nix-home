@@ -32,3 +32,9 @@ want to lose your existing packages.
     - [ ] iStat Menus
 - [ ] Get that secrets stuff going
   - Waiting on https://github.com/nix-community/home-manager/issues/5997 to get fixed for my Yubikey
+
+## Example Setup for project-specific local dev environments
+
+- Create a new flake with the necessary dependencies by using a template from https://github.com/the-nix-way/dev-templates?tab=readme-ov-file
+- Make direnv use that by executing the following in your project repo: `echo "use flake ~/my/new/flake/path" >> .envrc && direnv allow`
+  - More about setting up direnv with nix here: https://github.com/nix-community/nix-direnv?tab=readme-ov-file
