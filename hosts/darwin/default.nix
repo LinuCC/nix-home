@@ -851,7 +851,8 @@ in
                 
         alt-shift-minus = "resize smart -50";
         alt-shift-equal = "resize smart +50";
-                  alt-1 = "workspace 1";
+
+        alt-1 = "workspace 1";
         alt-2 = "workspace 2";
         alt-3 = "workspace 3";
         alt-4 = "workspace 4";
@@ -931,6 +932,9 @@ in
         alt-tab = "workspace-back-and-forth";
         # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
         alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
+        alt-shift-quote = "balance-sizes";
+
+        alt-shift-period = "fullscreen";
 
         # See: https://nikitabobko.github.io/AeroSpace/commands#mode
         alt-shift-semicolon = "mode service";
