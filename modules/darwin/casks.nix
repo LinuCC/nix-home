@@ -11,6 +11,7 @@ _:
   "discord"
   "slack"
   "microsoft-teams"
+  "gather"
 
   # Utility Tools
   "bitwarden"
