@@ -689,7 +689,7 @@ in
       bind-key -T copy-mode-vi 'C-\' select-pane -l
 
       set-option -g pane-border-lines "heavy"
-      set-option -g pane-active-border-style "fg=#ebcb8b"
+      set-option -g pane-active-border-style "fg=#ff8349"
 
       # Some BS around https://github.com/nix-community/home-manager/issues/5952
       set -gu default-command
