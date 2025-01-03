@@ -9,6 +9,7 @@ with pkgs; [
   bat
   btop
   coreutils
+  gitui
   # ghostty - not building, using cask for now
   killall
   neofetch
