@@ -811,22 +811,24 @@ in
         "/bin/bash"
         "-c"
         # Setting the FOCUSED_WORKSPACE variable does not work here, thats why the sketchybar script just uses aerospace list-workspaces --focused
-        "echo $(env) >> /tmp/aerospace.log; ${pkgs.sketchybar}/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=\"space.$AEROSPACE_FOCUSED_WORKSPACE\""
+        "${pkgs.sketchybar}/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=\"space.$AEROSPACE_FOCUSED_WORKSPACE\""
       ];
+      # TODO: Annoying since it locks the workspace to the monitor, even when manually trying to move it to another monitor. I just want to set the initial monitor
+      #   Wait for https://github.com/nikitabobko/AeroSpace/issues/123
       workspace-to-monitor-force-assignment = {
         # Assumes the following monitor layout:
         # 1 - the inbuild mac laptop screen left of the big screen
         # 2 - the big screen
         # 3 - the iPad underneith the big screen
         # main - stationary: big screen; on the move: inbuild laptop screen
-        "1" = "main";
+        # "1" = "main"; Allow moving till soft-assign implemented
         "2" = "main";
-        "3" = "main";
+        # "3" = "main"; Allow moving till soft-assign implemented
         "4" = "main";
         "5" = "main";
-        "6" = 1;
+        # "6" = 1;
         "7" = 1;
-        "8" = 1;
+        # "8" = 1; Allow moving til soft-assign implemented
         "9" = 1;
         "10" = 1;
         "Q" = 3;
@@ -835,7 +837,7 @@ in
         "R" = 3;
         "T" = 3;
         "Y" = 3;
-        "P" = 3;
+        # "P" = 3; Allow moving til soft-assign implemented
       };
       mode.main.binding = {
         alt-slash = "layout tiles horizontal vertical";
@@ -939,6 +941,20 @@ in
         # See: https://nikitabobko.github.io/AeroSpace/commands#mode
         alt-shift-semicolon = "mode service";
       };
+      mode.service.binding = {
+        esc = "mode main";
+
+        # l = [
+        #   "move-workspace-to-monitor --workspace 1 'main'"
+        #   "move-workspace-to-monitor --workspace 2 'main'"
+        #   "move-workspace-to-monitor --workspace 3 'main'"
+        #   "move-workspace-to-monitor --workspace 4 'main'"
+        #   "move-workspace-to-monitor --workspace 5 'main'"
+        #   "move-workspace-to-monitor --workspace 6 1"
+        #   "move-workspace-to-monitor --workspace 7 1"
+        #   ...
+        # ];
+      };
     };
   };
 
@@ -946,7 +962,7 @@ in
     enable = true;
     width = 3.0;
     active_color = "0xFFff8349";
-    inactive_color = "0xFFad5c7c";
+    inactive_color = "0xFF152528";
     hidpi = true;
     style = "rounded";
     order = "above"; # https://github.com/FelixKratz/JankyBorders/issues/37
