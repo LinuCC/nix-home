@@ -668,6 +668,12 @@ in
       bind-key -n M-j select-pane -D
       bind-key -n M-l select-pane -R
 
+      # Move around panes with vim-like bindings (h,j,k,l) with prefix - useful for nested tmux sessions
+      bind-key k select-pane -U
+      bind-key h select-pane -L
+      bind-key j select-pane -D
+      bind-key l select-pane -R
+
       # Smart pane switching with awareness of Vim splits.
       # This is copy paste from https://github.com/christoomey/vim-tmux-navigator
       # is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
