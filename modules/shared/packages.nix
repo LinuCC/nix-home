@@ -29,6 +29,8 @@ with pkgs; [
   docker
   docker-compose
   colima
+  opentofu
+  texlive.combined.scheme-full
 
   # Media-related packages
   # emacs-all-the-icons-fonts
