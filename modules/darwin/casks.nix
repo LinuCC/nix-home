@@ -23,6 +23,7 @@ _:
   "font-sketchybar-app-font"
 
   # Productivity Tools
+  "raycast"
 
   # Browsers
   "chromium"
