@@ -71,6 +71,16 @@ in
       commit.gpgsign = true;
       pull.rebase = true;
       rebase.autoStash = true;
+      push.autoSetupRemote = true;
+    };
+    delta = {
+      enable = true;
+      options = {
+        side-by-side = true;
+        line-numbers = true;
+        syntax-theme = "Nord";
+        true-color = "always";
+      };
     };
   };
 
