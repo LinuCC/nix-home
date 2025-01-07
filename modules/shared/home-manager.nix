@@ -699,6 +699,8 @@ in
       #   "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
 
       bind-key -T copy-mode-vi 'C-h' select-pane -L
+      set-option -g status-justify "centre"
+
       bind-key -T copy-mode-vi 'C-j' select-pane -D
       bind-key -T copy-mode-vi 'C-k' select-pane -U
       bind-key -T copy-mode-vi 'C-l' select-pane -R
