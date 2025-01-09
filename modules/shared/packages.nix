@@ -10,6 +10,7 @@ with pkgs; [
   btop
   coreutils
   tig
+  gitui
   # ghostty - not building, using cask for now
   killall
   neofetch
@@ -71,4 +72,5 @@ with pkgs; [
 
   # Music and entertainment
   spotify
+  gimp
 ]
