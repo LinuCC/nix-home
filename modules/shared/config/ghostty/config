@@ -14,3 +14,8 @@ font-thicken = true
 # Transparency
 background-opacity = 0.9
 background-blur-radius = 10
+
+# Me 'umlauts with alt+u,a/o/u
+# macos-option-as-alt = false
+
+command = /Users/linucc/.nix-profile/bin/zellij -l welcome

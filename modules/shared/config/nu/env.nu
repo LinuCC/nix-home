@@ -73,3 +73,4 @@ $env.PATH = (
       $"($env.HOME)/.dotnet/tools"
     ] | flatten
 )
+

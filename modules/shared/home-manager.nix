@@ -11,6 +11,11 @@ in
     plugins = [
     ];
     initExtraFirst = ''
+      if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
+      fi
+
       # gpg-agent for me yubikey
       unset SSH_AGENT_PID
       if [ "''${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
@@ -18,11 +23,6 @@ in
       fi
       export GPG_TTY=$(tty)
       gpg-agent updatestartuptty /bye >/dev/null
-
-      if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
-        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-        . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
-      fi
 
       # Define variables for directories
       export PATH=$HOME/.pnpm-packages/bin:$HOME/.pnpm-packages:$PATH
@@ -198,6 +198,111 @@ in
       '';
      };
 
+  zellij = {
+    enable = true;
+    settings = {
+      theme = "terafox";
+      default_shell = "${pkgs.nushell}/bin/nu";
+      # default_mode = "locked";
+      mouse_mode = true;
+      keybinds = {
+        locked = {
+          "bind \"Ctrl b\"" = {
+            SwitchToMode = {
+              _args = [ "normal" ];
+            };
+          };
+          "unbind \"Ctrl g\"" = {
+          };
+        };
+        pane = {
+          "bind \"Ctrl b\"" = {
+            SwitchToMode = {
+              _args = [ "locked" ];
+            };
+          };
+          "unbind \"Ctrl g\"" = {
+          };
+        };
+        tab = {
+          "bind \"Ctrl b\"" = {
+            SwitchToMode = {
+              _args = [ "locked" ];
+            };
+          };
+          "bind \"1\"" = { GoToTab = { _args = [ 1 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "bind \"2\"" = { GoToTab = { _args = [ 2 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "bind \"3\"" = { GoToTab = { _args = [ 3 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "bind \"4\"" = { GoToTab = { _args = [ 4 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "bind \"5\"" = { GoToTab = { _args = [ 5 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "bind \"6\"" = { GoToTab = { _args = [ 6 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "bind \"7\"" = { GoToTab = { _args = [ 7 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "bind \"8\"" = { GoToTab = { _args = [ 8 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "bind \"9\"" = { GoToTab = { _args = [ 9 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "bind \"0\"" = { GoToTab = { _args = [ 0 ]; }; SwitchToMode = { _args = ["normal"]; }; };
+          "unbind \"Ctrl g\"" = {
+          };
+        };
+        resize = {
+          "bind \"Ctrl b\"" = {
+            SwitchToMode = {
+              _args = [ "locked" ];
+            };
+          };
+          "unbind \"Ctrl g\"" = {
+          };
+        };
+        move = {
+          "bind \"Ctrl b\"" = {
+            SwitchToMode = {
+              _args = [ "locked" ];
+            };
+          };
+          "unbind \"Ctrl g\"" = {
+          };
+        };
+        search = {
+          "bind \"Ctrl b\"" = {
+            SwitchToMode = {
+              _args = [ "locked" ];
+            };
+          };
+          "unbind \"Ctrl g\"" = {
+          };
+        };
+        session = {
+          "bind \"Ctrl b\"" = {
+            SwitchToMode = {
+              _args = [ "locked" ];
+            };
+          };
+          # Move Quit out of the normal mode
+          "bind \"Ctrl q\"" = {
+            Quit = { };
+          };
+          "unbind \"Ctrl g\"" = {
+          };
+        };
+        normal = {
+          "bind \"Ctrl b\"" = {
+            SwitchToMode = {
+              _args = [ "locked" ];
+            };
+          };
+          "unbind \"Ctrl q\"" = {
+          };
+          # "bind \"Esc\"" = {
+          #   SwitchToMode = {
+          #     _args = [ "locked" ];
+          #   };
+          # };
+          "unbind \"Ctrl g\"" = {
+          };
+        };
+      };
+    };
+  };
+
   alacritty = {
     enable = true;
     settings = {
@@ -328,6 +433,16 @@ in
   nushell = {
     enable = true;
     configFile.source = ./config/nu/config.nu;
+    extraEnv = ''
+      $env.__NIX_DARWIN_SET_ENVIRONMENT_DONE = 1 
+      $env.PATH = (
+        $env.PATH | prepend [
+          $"($env.HOME)/.nix-profile/bin"
+          $"/etc/profiles/per-user/($env.USER)/bin"
+      ] | append [
+        "/nix/var/nix/profiles/default/bin"
+      ])
+    '';
     extraConfig = ''
        let carapace_completer = {|spans|
        carapace $spans.0 nushell $spans | from json
