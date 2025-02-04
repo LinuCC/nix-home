@@ -15,6 +15,7 @@ _:
 
   # Utility Tools
   "bitwarden"
+  "1password"
   "alfred"
   "istat-menus"
   "proton-mail-bridge"
