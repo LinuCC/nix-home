@@ -793,9 +793,6 @@ in
      agenix.darwinModules.default
   ];
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-
   services.aerospace = {
     enable = true;
     settings = {
@@ -1042,6 +1039,7 @@ sketchybar --update
     '';
   };
 
+  ids.gids.nixbld = 350;
 
   # Setup user, packages, programs
   nix = {
@@ -1056,7 +1054,6 @@ sketchybar --update
     };
 
     gc = {
-      user = "root";
       automatic = true;
       interval = { Weekday = 0; Hour = 2; Minute = 0; };
       options = "--delete-older-than 30d";
@@ -1111,8 +1108,8 @@ sketchybar --update
         InitialKeyRepeat = 15;
 
         "com.apple.mouse.tapBehavior" = 1;
-        "com.apple.sound.beep.volume" = 0.0;
-        "com.apple.sound.beep.feedback" = 0;
+        "com.apple.sound.beep.volume" = 1.0;
+        "com.apple.sound.beep.feedback" = 1;
         _HIHideMenuBar = true;
       };
 
