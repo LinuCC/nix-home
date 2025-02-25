@@ -205,99 +205,576 @@ in
       default_shell = "${pkgs.nushell}/bin/nu";
       # default_mode = "locked";
       mouse_mode = true;
-      keybinds = {
+
+      # Mostly default "unlock-first" keybinds using Ctrl-b instead of Ctrl-g
+      "keybinds clear-defaults=true" = {
         locked = {
           "bind \"Ctrl b\"" = {
             SwitchToMode = {
               _args = [ "normal" ];
             };
           };
-          "unbind \"Ctrl g\"" = {
-          };
         };
+        
         pane = {
-          "bind \"Ctrl b\"" = {
-            SwitchToMode = {
-              _args = [ "locked" ];
+          "bind \"left\"" = {
+            MoveFocus = {
+              _args = [ "left" ];
             };
           };
-          "unbind \"Ctrl g\"" = {
+          "bind \"down\"" = {
+            MoveFocus = {
+              _args = [ "down" ];
+            };
+          };
+          "bind \"up\"" = {
+            MoveFocus = {
+              _args = [ "up" ];
+            };
+          };
+          "bind \"right\"" = {
+            MoveFocus = {
+              _args = [ "right" ];
+            };
+          };
+          "bind \"c\"" = {
+            SwitchToMode = {
+              _args = [ "renamepane" ];
+            };
+            PaneNameInput = [ 0 ];
+          };
+          "bind \"d\"" = {
+            NewPane = [ "down" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"e\"" = {
+            TogglePaneEmbedOrFloating = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"f\"" = {
+            ToggleFocusFullscreen = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"h\"" = {
+            MoveFocus = [ "left" ];
+          };
+          "bind \"j\"" = {
+            MoveFocus = [ "down" ];
+          };
+          "bind \"k\"" = {
+            MoveFocus = [ "up" ];
+          };
+          "bind \"l\"" = {
+            MoveFocus = [ "right" ];
+          };
+          "bind \"n\"" = {
+            NewPane = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"p\"" = {
+            SwitchToMode = [ "normal" ];
+          };
+          "bind \"r\"" = {
+            NewPane = [ "right" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"w\"" = {
+            ToggleFloatingPanes = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"x\"" = {
+            CloseFocus = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"z\"" = {
+            TogglePaneFrames = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"tab\"" = {
+            SwitchFocus = { };
           };
         };
+
         tab = {
-          "bind \"Ctrl b\"" = {
-            SwitchToMode = {
-              _args = [ "locked" ];
-            };
+          "bind \"left\"" = {
+            GoToPreviousTab = { };
           };
-          "bind \"1\"" = { GoToTab = { _args = [ 1 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "bind \"2\"" = { GoToTab = { _args = [ 2 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "bind \"3\"" = { GoToTab = { _args = [ 3 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "bind \"4\"" = { GoToTab = { _args = [ 4 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "bind \"5\"" = { GoToTab = { _args = [ 5 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "bind \"6\"" = { GoToTab = { _args = [ 6 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "bind \"7\"" = { GoToTab = { _args = [ 7 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "bind \"8\"" = { GoToTab = { _args = [ 8 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "bind \"9\"" = { GoToTab = { _args = [ 9 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "bind \"0\"" = { GoToTab = { _args = [ 0 ]; }; SwitchToMode = { _args = ["normal"]; }; };
-          "unbind \"Ctrl g\"" = {
+          "bind \"down\"" = {
+            GoToNextTab = { };
+          };
+          "bind \"up\"" = {
+            GoToPreviousTab = { };
+          };
+          "bind \"right\"" = {
+            GoToNextTab = { };
+          };
+          "bind \"1\"" = {
+            GoToTab = {
+              _args = [ 1 ];
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"2\"" = {
+            GoToTab = {
+              _args = [ 2 ];
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"3\"" = {
+            GoToTab = {
+              _args = [ 3 ];
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"4\"" = {
+            GoToTab = {
+              _args = [ 4 ];
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"5\"" = {
+            GoToTab = {
+              _args = [ 5 ];
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"6\"" = {
+            GoToTab = {
+              _args = [ 6 ];
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"7\"" = {
+            GoToTab = {
+              _args = [ 7 ];
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"8\"" = {
+            GoToTab = {
+              _args = [ 8 ];
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"9\"" = {
+            GoToTab = {
+              _args = [ 9 ];
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"[\"" = {
+            PreviousSwapLayout = { };
+          };
+          "bind \"]\"" = {
+            NextSwapLayout = { };
+          };
+          "bind \"b\"" = {
+            BreakPane = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"h\"" = {
+            GoToPreviousTab = { };
+          };
+          "bind \"j\"" = {
+            GoToNextTab = { };
+          };
+          "bind \"k\"" = {
+            GoToPreviousTab = { };
+          };
+          "bind \"l\"" = {
+            GoToNextTab = { };
+          };
+          "bind \"n\"" = {
+            NewTab = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"r\"" = {
+            SwitchToMode = [ "renametab" ];
+            TabNameInput = [ 0 ];
+          };
+          "bind \"s\"" = {
+            ToggleActiveSyncTab = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"t\"" = {
+            SwitchToMode = [ "normal" ];
+          };
+          "bind \"x\"" = {
+            CloseTab = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"tab\"" = {
+            ToggleTab = { };
           };
         };
+
         resize = {
-          "bind \"Ctrl b\"" = {
-            SwitchToMode = {
-              _args = [ "locked" ];
+          "bind \"left\"" = {
+            Resize = {
+              _args = [ "Increase left" ];
             };
           };
-          "unbind \"Ctrl g\"" = {
-          };
-        };
-        move = {
-          "bind \"Ctrl b\"" = {
-            SwitchToMode = {
-              _args = [ "locked" ];
+          "bind \"down\"" = {
+            Resize = {
+              _args = [ "Increase down" ];
             };
           };
-          "unbind \"Ctrl g\"" = {
+          "bind \"up\"" = {
+            Resize = {
+              _args = [ "Increase up" ];
+            };
+          };
+          "bind \"right\"" = {
+            Resize = {
+              _args = [ "Increase right" ];
+            };
+          };
+          "bind \"+\"" = {
+            Resize = {
+              _args = [ "Increase" ];
+            };
+          };
+          "bind \"-\"" = {
+            Resize = {
+              _args = [ "Decrease" ];
+            };
+          };
+          "bind \"=\"" = {
+            Resize = {
+              _args = [ "Increase" ];
+            };
+          };
+          "bind \"H\"" = {
+            Resize = {
+              _args = [ "Decrease left" ];
+            };
+          };
+          "bind \"J\"" = {
+            Resize = {
+              _args = [ "Decrease down" ];
+            };
+          };
+          "bind \"K\"" = {
+            Resize = {
+              _args = [ "Decrease up" ];
+            };
+          };
+          "bind \"L\"" = {
+            Resize = {
+              _args = [ "Decrease right" ];
+            };
+          };
+          "bind \"h\"" = {
+            Resize = {
+              _args = [ "Increase left" ];
+            };
+          };
+          "bind \"j\"" = {
+            Resize = {
+              _args = [ "Increase down" ];
+            };
+          };
+          "bind \"k\"" = {
+            Resize = {
+              _args = [ "Increase up" ];
+            };
+          };
+          "bind \"l\"" = {
+            Resize = {
+              _args = [ "Increase right" ];
+            };
+          };
+          "bind \"r\"" = {
+            SwitchToMode = {
+              _args = [ "normal" ];
+            };
           };
         };
+
+        scroll = {
+          "bind \"Alt left\"" = {
+            MoveFocusOrTab = [ "left" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"Alt down\"" = {
+            MoveFocus = [ "down" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"Alt up\"" = {
+            MoveFocus = [ "up" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"Alt right\"" = {
+            MoveFocusOrTab = [ "right" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"e\"" = {
+            EditScrollback = { };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"f\"" = {
+            SwitchToMode = [ "entersearch" ];
+            SearchInput = [ 0 ];
+          };
+          "bind \"Alt h\"" = {
+            MoveFocusOrTab = [ "left" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"Alt j\"" = {
+            MoveFocus = [ "down" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"Alt k\"" = {
+            MoveFocus = [ "up" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"Alt l\"" = {
+            MoveFocusOrTab = [ "right" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"s\"" = {
+            SwitchToMode = [ "normal" ];
+          };
+        };
+
         search = {
-          "bind \"Ctrl b\"" = {
-            SwitchToMode = {
-              _args = [ "locked" ];
-            };
+          "bind \"c\"" = {
+            SearchToggleOption = [ "CaseSensitivity" ];
           };
-          "unbind \"Ctrl g\"" = {
+          "bind \"n\"" = {
+            Search = [ "down" ];
+          };
+          "bind \"o\"" = {
+            SearchToggleOption = [ "WholeWord" ];
+          };
+          "bind \"p\"" = {
+            Search = [ "up" ];
+          };
+          "bind \"w\"" = {
+            SearchToggleOption = [ "Wrap" ];
           };
         };
+
         session = {
-          "bind \"Ctrl b\"" = {
-            SwitchToMode = {
-              _args = [ "locked" ];
-            };
+          "bind \"c\"" = {
+            LaunchOrFocusPlugin = [ "configuration" ];
+            SwitchToMode = [ "locked" ];
           };
-          # Move Quit out of the normal mode
+          "bind \"d\"" = {
+            Detach = { };
+          };
+          "bind \"o\"" = {
+            SwitchToMode = [ "normal" ];
+          };
+          "bind \"p\"" = {
+            LaunchOrFocusPlugin = [ "plugin-manager" ];
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"w\"" = {
+            LaunchOrFocusPlugin = [ "session-manager" ];
+            SwitchToMode = [ "locked" ];
+          };
+        };
+
+        shared_among = {
+          _args = [ 
+            # "normal" # Use Ctrl-g as "escape" to allow sending Alt-<key> to terminal
+            "locked" 
+          ];
+
+          "bind \"Alt left\"" = {
+            MoveFocusOrTab = [ "left" ];
+          };
+          "bind \"Alt down\"" = {
+            MoveFocus = [ "down" ];
+          };
+          "bind \"Alt up\"" = {
+            MoveFocus = [ "up" ];
+          };
+          "bind \"Alt right\"" = {
+            MoveFocusOrTab = [ "right" ];
+          };
+          "bind \"Alt +\"" = {
+            Resize = [ "Increase" ];
+          };
+          "bind \"Alt -\"" = {
+            Resize = [ "Decrease" ];
+          };
+          "bind \"Alt =\"" = {
+            Resize = [ "Increase" ];
+          };
+          "bind \"Alt [\"" = {
+            PreviousSwapLayout = { };
+          };
+          "bind \"Alt ]\"" = {
+            NextSwapLayout = { };
+          };
+          "bind \"Alt f\"" = {
+            ToggleFloatingPanes = { };
+          };
+          "bind \"Alt h\"" = {
+            MoveFocusOrTab = [ "left" ];
+          };
+          "bind \"Alt i\"" = {
+            MoveTab = [ "left" ];
+          };
+          "bind \"Alt j\"" = {
+            MoveFocus = [ "down" ];
+          };
+          "bind \"Alt k\"" = {
+            MoveFocus = [ "up" ];
+          };
+          "bind \"Alt l\"" = {
+            MoveFocusOrTab = [ "right" ];
+          };
+          "bind \"Alt n\"" = {
+            NewPane = { };
+          };
+          "bind \"Alt o\"" = {
+            MoveTab = [ "right" ];
+          };
+        };
+
+        "shared_except \"locked\" \"renametab\" \"renamepane\"" = {
+          "bind \"Ctrl b\"" = {
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"b\"" = {
+            Write = 2; # Send Ctrl-b to terminal
+            SwitchToMode = [ "locked" ];
+          };
           "bind \"Ctrl q\"" = {
             Quit = { };
           };
-          "unbind \"Ctrl g\"" = {
+        };
+
+        "shared_except \"locked\" \"entersearch\"" = {
+          "bind \"enter\"" = {
+            SwitchToMode = [ "locked" ];
           };
         };
-        normal = {
+
+        "shared_except \"locked\" \"entersearch\" \"renametab\" \"renamepane\"" = {
+          "bind \"esc\"" = {
+            SwitchToMode = [ "locked" ];
+          };
+        };
+
+        "shared_except \"locked\" \"entersearch\" \"renametab\" \"renamepane\" \"move\"" = {
+          "bind \"m\"" = {
+            SwitchToMode = [ "move" ];
+          };
+        };
+
+        "shared_except \"locked\" \"entersearch\" \"search\" \"renametab\" \"renamepane\"" = {
+          "bind \"o\"" = {
+            SwitchToMode = [ "session" ];
+          };
+        };
+
+        "shared_except \"locked\" \"tab\" \"entersearch\" \"renametab\" \"renamepane\"" = {
+          "bind \"t\"" = {
+            SwitchToMode = [ "tab" ];
+          };
+        };
+
+        "shared_except \"locked\" \"tab\" \"scroll\" \"entersearch\" \"renametab\" \"renamepane\"" = {
+          "bind \"s\"" = {
+            SwitchToMode = [ "scroll" ];
+          };
+        };
+
+        "shared_among \"normal\" \"resize\" \"tab\" \"scroll\" \"prompt\" \"tmux\"" = {
+          "bind \"p\"" = {
+            SwitchToMode = [ "pane" ];
+          };
+        };
+
+        "shared_except \"locked\" \"resize\" \"pane\" \"tab\" \"entersearch\" \"renametab\" \"renamepane\"" = {
+          "bind \"r\"" = {
+            SwitchToMode = [ "resize" ];
+          };
+        };
+
+        "shared_among \"scroll\" \"search\"" = {
+          "bind \"PageDown\"" = {
+            PageScrollDown = { };
+          };
+          "bind \"PageUp\"" = {
+            PageScrollUp = { };
+          };
+          "bind \"left\"" = {
+            PageScrollUp = { };
+          };
+          "bind \"down\"" = {
+            ScrollDown = { };
+          };
+          "bind \"up\"" = {
+            ScrollUp = { };
+          };
+          "bind \"right\"" = {
+            PageScrollDown = { };
+          };
           "bind \"Ctrl b\"" = {
-            SwitchToMode = {
-              _args = [ "locked" ];
-            };
+            PageScrollUp = { };
           };
-          "unbind \"Ctrl q\"" = {
+          "bind \"Ctrl c\"" = {
+            ScrollToBottom = { };
+            SwitchToMode = [ "locked" ];
           };
-          # "bind \"Esc\"" = {
-          #   SwitchToMode = {
-          #     _args = [ "locked" ];
-          #   };
-          # };
-          "unbind \"Ctrl g\"" = {
+          "bind \"d\"" = {
+            HalfPageScrollDown = { };
           };
+          "bind \"Ctrl f\"" = {
+            PageScrollDown = { };
+          };
+          "bind \"h\"" = {
+            PageScrollUp = { };
+          };
+          "bind \"j\"" = {
+            ScrollDown = { };
+          };
+          "bind \"k\"" = {
+            ScrollUp = { };
+          };
+          "bind \"l\"" = {
+            PageScrollDown = { };
+          };
+          "bind \"u\"" = {
+            HalfPageScrollUp = { };
+          };
+        };
+      };
+
+      entersearch = {
+        "bind \"Ctrl c\"" = {
+          SwitchToMode = [ "scroll" ];
+        };
+        "bind \"esc\"" = {
+          SwitchToMode = [ "scroll" ];
+        };
+        "bind \"enter\"" = {
+          SwitchToMode = [ "search" ];
+        };
+      };
+
+      renametab = {
+        "bind \"esc\"" = {
+          UndoRenameTab = { };
+          SwitchToMode = [ "tab" ];
+        };
+      };
+
+      "shared_among \"renametab\" \"renamepane\"" = {
+        "bind \"Ctrl c\"" = {
+          SwitchToMode = [ "locked" ];
+        };
+      };
+
+      renamepane = {
+        "bind \"esc\"" = {
+          UndoRenamePane = { };
+          SwitchToMode = [ "pane" ];
         };
       };
     };
