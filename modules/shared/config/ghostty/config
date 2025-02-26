@@ -12,10 +12,21 @@ macos-titlebar-style = hidden
 font-thicken = true
 
 # Transparency
-background-opacity = 0.9
-background-blur-radius = 10
+background-opacity = 0.85
+background-blur-radius = 7
 
 # Me 'umlauts with alt+u,a/o/u
 # macos-option-as-alt = false
+macos-option-as-alt = true
+
+
+# Unbind to directly use these keys, otherwise they are bound to this (for compat reasons?):
+# keybind = alt+left=esc:b
+# keybind = alt+right=esc:f
+keybind = alt+left=unbind
+keybind = alt+right=unbind
+
+# If something doesn't work in Nvim / Zellij, try this first and _restart_ (Hot Reloading is dodgy for keybinds):
+# keybind=clear
 
 command = /Users/linucc/.nix-profile/bin/zellij -l welcome
