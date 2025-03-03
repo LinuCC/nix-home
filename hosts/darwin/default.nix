@@ -793,6 +793,15 @@ in
      agenix.darwinModules.default
   ];
 
+  stylix = {
+    enable = true;
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    image = pkgs.fetchurl {
+      url = "https://w.wallhaven.cc/full/kx/wallhaven-kxpk21.png";
+      sha256 = "sha256-H0WV67iBDPGbuylcdnxfmsKk2qA/LIGDG13TgPDLwkc=";
+    };
+  };
+
   services.aerospace = {
     enable = true;
     settings = {

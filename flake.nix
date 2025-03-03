@@ -4,6 +4,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     agenix.url = "github:ryantm/agenix";
     home-manager.url = "github:nix-community/home-manager";
+    stylix.url = "github:danth/stylix";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -37,7 +38,7 @@
     #   flake = false;
     # };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, astro-nvim } @inputs:
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, astro-nvim, stylix } @inputs:
     let
       user = "linucc";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -91,6 +92,7 @@
             home-manager.darwinModules.home-manager
             nix-homebrew.darwinModules.nix-homebrew
             astro-nvim.darwinModules.astroNvim
+            stylix.darwinModules.stylix
             {
               nix-homebrew = {
                 inherit user;
@@ -114,6 +116,7 @@
         specialArgs = inputs;
         modules = [
           disko.nixosModules.disko
+          stylix.nixosModules.stylix
           home-manager.nixosModules.home-manager {
             home-manager = {
               useGlobalPkgs = true;
