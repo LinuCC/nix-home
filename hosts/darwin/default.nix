@@ -1,4 +1,4 @@
-{ agenix, config, pkgs, ... }:
+{ agenix, config, pkgs, self, ... }:
 
 let 
   user = "linucc"; 
@@ -831,12 +831,12 @@ in
         # 3 - the iPad underneith the big screen
         # main - stationary: big screen; on the move: inbuild laptop screen
         # "1" = "main"; Allow moving till soft-assign implemented
-        "2" = "main";
+        # "2" = "main";
         # "3" = "main"; Allow moving till soft-assign implemented
         "4" = "main";
         "5" = "main";
         # "6" = 1;
-        "7" = 1;
+        # "7" = 1;
         # "8" = 1; Allow moving til soft-assign implemented
         "9" = 1;
         "10" = 1;

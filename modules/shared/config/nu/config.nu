@@ -260,7 +260,6 @@ $env.config = {
     # status_bar_text: {fg: '#C4C9C6' bg: '#223311' }
 
     highlight: {bg: 'yellow' fg: 'black' }
-
     status: {
       # warn: {bg: 'yellow', fg: 'blue'}
       # error: {bg: 'yellow', fg: 'blue'}

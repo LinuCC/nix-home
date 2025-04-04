@@ -206,7 +206,6 @@ in
     settings = {
       # theme = "terafox";
       default_shell = "${pkgs.nushell}/bin/nu";
-      # default_mode = "locked";
       mouse_mode = true;
 
       # Mostly default "unlock-first" keybinds using Ctrl-b instead of Ctrl-g
@@ -386,6 +385,12 @@ in
           };
           "bind \"l\"" = {
             GoToNextTab = { };
+          };
+          "bind \"Shift h\"" = {
+            MoveTab = [ "Left" ];
+          };
+          "bind \"Shift l\"" = {
+            MoveTab = [ "Right" ];
           };
           "bind \"n\"" = {
             NewTab = { };
@@ -579,12 +584,9 @@ in
           };
         };
 
-        shared_among = {
-          _args = [ 
-            # "normal" # Use Ctrl-g as "escape" to allow sending Alt-<key> to terminal
-            "locked" 
-          ];
-
+        # disable "normal" to use Ctrl-b as "escape" to allow sending Alt-<key> to terminal
+        # "shared_among \"locked\" \"normal\"" = {
+        "shared_among \"locked\"" = {
           "bind \"Alt left\"" = {
             MoveFocusOrTab = [ "left" ];
           };

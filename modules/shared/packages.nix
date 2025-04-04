@@ -11,7 +11,7 @@ with pkgs; [
   coreutils
   tig
   gitui
-  # ghostty - not building, using cask for now
+  # ghostty - not building, using cask for now https://github.com/ghostty-org/ghostty/discussions/4786#discussioncomment-11766857
   killall
   neofetch
   nushell
