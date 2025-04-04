@@ -782,6 +782,9 @@ let
               --set wifi "''${WIFI[@]}" \
               --subscribe wifi wifi_change
   '';
+
+  terafox-base-16 = self + "/configs/base-16-terafox.yaml";
+  catpuccin-mocca-base-16 = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
 in
 
 {
@@ -795,7 +798,7 @@ in
 
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    base16Scheme = terafox-base-16;
     image = pkgs.fetchurl {
       url = "https://w.wallhaven.cc/full/kx/wallhaven-kxpk21.png";
       sha256 = "sha256-H0WV67iBDPGbuylcdnxfmsKk2qA/LIGDG13TgPDLwkc=";
