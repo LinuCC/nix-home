@@ -19,6 +19,7 @@ _:
   "alfred"
   "istat-menus"
   "proton-mail-bridge"
+  # "parallels" # Does not work right now, manually installed
 
   # Entertainment Tools
   "font-sketchybar-app-font"
@@ -29,4 +30,5 @@ _:
   # Browsers
   "chromium"
   "firefox"
+  "orion"
 ]
