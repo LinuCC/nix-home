@@ -87,9 +87,9 @@ in
     };
   };
 
-  mise = {
-    enable = true;
-  };
+  # mise = {
+  #   enable = true;
+  # };
 
   vim = {
     enable = true;
@@ -868,96 +868,77 @@ in
       ])
     '';
     extraConfig = ''
-       let carapace_completer = {|spans|
-       carapace $spans.0 nushell $spans | from json
-       }
-       $env.config = {
-        show_banner: false,
-        completions: {
-        case_sensitive: false # case-sensitive completions
-        quick: true    # set to false to prevent auto-selecting completions
-        partial: true    # set to false to prevent partial filling of the prompt
-        algorithm: "fuzzy"    # prefix or fuzzy
-        external: {
-        # set to false to prevent nushell looking into $env.PATH to find more suggestions
-            enable: true 
-        # set to lower can improve completion performance at the cost of omitting some options
-            max_results: 100 
-            completer: $carapace_completer # check 'carapace_completer' 
-          }
-        }
-       } 
-       $env.PATH = ($env.PATH | 
-       split row (char esep) |
-       prepend /home/myuser/.apps |
-       append /usr/bin/env
-       )
-      '' + ''
-        export-env {
-          $env.MISE_SHELL = "nu"
-          
-          $env.config = ($env.config | upsert hooks {
-              pre_prompt: ($env.config.hooks.pre_prompt ++
-              [{
-              condition: {|| "MISE_SHELL" in $env }
-              code: {|| mise_hook }
-              }])
-              env_change: {
-                  PWD: ($env.config.hooks.env_change.PWD ++
-                  [{
-                  condition: {|| "MISE_SHELL" in $env }
-                  code: {|| mise_hook }
-                  }])
-              }
-          })
-        }
-          
-        def "parse vars" [] {
-          $in | lines | parse "{op},{name},{value}"
-        }
-          
-        def --env mise [command?: string, --help, ...rest: string] {
-          let commands = ["shell", "deactivate"]
-          
-          if ($command == null) {
-            ^"${pkgs.mise}/bin/mise"
-          } else if ($command == "activate") {
-            $env.MISE_SHELL = "nu"
-          } else if ($command in $commands) {
-            ^"${pkgs.mise}/bin/mise" $command $rest
-            | parse vars
-            | update-env
-          } else {
-            ^"${pkgs.mise}/bin/mise" $command ...$rest
-          }
-        }
-          
-        def --env "update-env" [] {
-          for $var in $in {
-            if $var.op == "set" {
-              load-env {($var.name): $var.value}
-            } else if $var.op == "hide" {
-              hide-env $var.name
-            }
-          }
-        }
-          
-        def --env mise_hook [] {
-          ^"${pkgs.mise}/bin/mise" hook-env -s nu
-            | parse vars
-            | update-env
-        }
-      '' + ''
-        # Direnv setup
-
-        { ||
-            if (which direnv | is-empty) {
-                return
-            }
-
-            direnv export json | from json | default {} | load-env
-        }
-      '';
+      $env.PATH = ($env.PATH | 
+      split row (char esep) |
+      append /usr/bin/env
+      )
+      ''; 
+  # + ''
+      #     export-env {
+      #       $env.MISE_SHELL = "nu"
+      #       
+      #       $env.config = ($env.config | upsert hooks {
+      #           pre_prompt: ($env.config.hooks.pre_prompt ++
+      #           [{
+      #           condition: {|| "MISE_SHELL" in $env }
+      #           code: {|| mise_hook }
+      #           }])
+      #           env_change: {
+      #               PWD: ($env.config.hooks.env_change.PWD ++
+      #               [{
+      #               condition: {|| "MISE_SHELL" in $env }
+      #               code: {|| mise_hook }
+      #               }])
+      #           }
+      #       })
+      #     }
+      #       
+      #     def "parse vars" [] {
+      #       $in | lines | parse "{op},{name},{value}"
+      #     }
+      #       
+      #     def --env mise [command?: string, --help, ...rest: string] {
+      #       let commands = ["shell", "deactivate"]
+      #       
+      #       if ($command == null) {
+      #         ^"${pkgs.mise}/bin/mise"
+      #       } else if ($command == "activate") {
+      #         $env.MISE_SHELL = "nu"
+      #       } else if ($command in $commands) {
+      #         ^"${pkgs.mise}/bin/mise" $command $rest
+      #         | parse vars
+      #         | update-env
+      #       } else {
+      #         ^"${pkgs.mise}/bin/mise" $command ...$rest
+      #       }
+      #     }
+      #       
+      #     def --env "update-env" [] {
+      #       for $var in $in {
+      #         if $var.op == "set" {
+      #           load-env {($var.name): $var.value}
+      #         } else if $var.op == "hide" {
+      #           hide-env $var.name
+      #         }
+      #       }
+      #     }
+      #       
+      #     def --env mise_hook [] {
+      #       ^"${pkgs.mise}/bin/mise" hook-env -s nu
+      #         | parse vars
+      #         | update-env
+      #     }
+      #   '' + ''
+      #     # Direnv setup
+      #
+      #     { ||
+      #         if (which direnv | is-empty) {
+      #             return
+      #         }
+      #
+      #         direnv export json | from json | default {} | load-env
+      #     }
+      #   '';
     envFile.source = ./config/nu/env.nu;
   };
 
