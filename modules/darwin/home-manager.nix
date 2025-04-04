@@ -28,7 +28,13 @@ in
     enable = true;
     casks = pkgs.callPackage ./casks.nix {};
     brews = pkgs.callPackage ./brews.nix {};
-    onActivation.cleanup = "zap";
+    taps = builtins.attrNames config.nix-homebrew.taps;
+
+    onActivation = {
+      cleanup = "zap";
+      autoUpdate = true;
+      upgrade = true;
+    };
 
     # These app IDs are from using the mas CLI app
     # mas = mac app store

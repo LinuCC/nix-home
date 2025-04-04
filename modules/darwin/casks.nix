@@ -19,6 +19,7 @@ _:
   "alfred"
   "istat-menus"
   "proton-mail-bridge"
+  "betterdisplay"
   # "parallels" # Does not work right now, manually installed
 
   # Entertainment Tools

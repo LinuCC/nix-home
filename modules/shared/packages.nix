@@ -19,6 +19,7 @@ with pkgs; [
   sqlite
   wget
   zip
+  oxker
 
   # Encryption and security tools
   age
@@ -31,7 +32,7 @@ with pkgs; [
   docker-compose
   colima
   opentofu
-  texlive.combined.scheme-full
+  # texlive.combined.scheme-full
 
   # Media-related packages
   # emacs-all-the-icons-fonts
@@ -40,7 +41,7 @@ with pkgs; [
   fd
   font-awesome
   nerd-fonts.iosevka
-  nerd-fonts.mplus
+  nerd-fonts."m+"
   iosevka
   hack-font
   noto-fonts

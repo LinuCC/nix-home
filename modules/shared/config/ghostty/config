@@ -12,7 +12,7 @@ macos-titlebar-style = hidden
 font-thicken = true
 
 # Transparency
-background-opacity = 0.85
+background-opacity = 0.75
 background-blur-radius = 0
 
 # Me 'umlauts with alt+u,a/o/u
