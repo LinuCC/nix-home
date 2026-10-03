@@ -1,25 +1,29 @@
 _:
 
-[
+let
+  mkGreedy = caskName: { name = caskName; greedy = true; };
+in map mkGreedy [
   # Development Tools
-  "homebrew/cask/docker"
+  # "homebrew/cask/docker"
+  # "docker-desktop"
   "visual-studio-code"
   # TODO: Try out building the Nix package once its not bleeding edge anymore
   "ghostty"
+  "wine-stable"
 
   # Communication Tools
-  "discord"
-  "slack"
+  # "discord"
+  # "slack"
   "microsoft-teams"
-  "gather"
 
   # Utility Tools
   "bitwarden"
   "1password"
-  "alfred"
+  # "alfred"
   "istat-menus"
   "proton-mail-bridge"
-  "betterdisplay"
+  "tunnelblick"
+  # "betterdisplay"
   # "parallels" # Does not work right now, manually installed
 
   # Entertainment Tools
@@ -29,7 +33,8 @@ _:
   "raycast"
 
   # Browsers
-  "chromium"
+  "ungoogled-chromium"
+    # "chromium"
   "firefox"
-  "orion"
+  # "orion"
 ]

@@ -57,9 +57,17 @@ in
   # Enable home-manager
   home-manager = {
     useGlobalPkgs = true;
+    backupFileExtension = "backup";
     users.${user} = { pkgs, config, lib, ... }:{
+      imports = [
+        ../../modules/darwin/sketchybar/sketchybar.nix
+      ];
+
       stylix = {
         enable = true;
+        # rofi is unused here (and X11-only); the target only exists to emit a
+        # renamed-option warning. Upstream fix: nix-community/stylix#2501.
+        targets.rofi.enable = false;
       };
 
       home = {

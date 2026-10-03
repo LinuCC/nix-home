@@ -7,8 +7,17 @@ let
   xdg_configHome = "${config.users.users.${user}.home}/.config"; in
 {
 
-  "${xdg_configHome}/ghostty/config" = {
-    source = ./config/ghostty/config;
+  # "${xdg_configHome}/ghostty/config" = {
+  #   source = ./config/ghostty/config;
+  #   recursive = true;
+  # };
+
+  "${xdg_configHome}/ghostty/shaders" = {
+    source = ./config/ghostty/shaders;
+    recursive = true;
+  };
+  ".local/bin" = {
+    source = ./scripts;
     recursive = true;
   };
   # "${xdg_configHome}/nu/completions/git-completions.nu" = {

@@ -1,25 +1,56 @@
 { pkgs }:
-
-with pkgs; [
+with pkgs;
+let 
+  # old-spotify = pkgs.spotify.overrideAttrs (oldAttrs: {
+  #   src =
+  #     if (pkgs.stdenv.isDarwin && pkgs.stdenv.isAarch64) then
+  #       pkgs.fetchurl {
+  #         url = "https://web.archive.org/web/20251029235406/https://download.scdn.co/SpotifyARM64.dmg";
+  #         hash = "sha256-0gwoptqLBJBM0qJQ+dGAZdCD6WXzDJEs0BfOxz7f2nQ=";
+  #       }
+  #     else
+  #       oldAttrs.src;
+  # });
+  appSupport = "/Users/linucc/Library/Application Support";
+  # macOS 27 restricts ~/Library/Application Support/<App> to Mozilla-signed
+  # builds; nixpkgs browsers are unsigned, so relocate the datadir.
+  relocateDataDir = name: drv:
+    if pkgs.stdenv.isDarwin
+    then drv.override { appDataDir = "${appSupport}/${name}"; }
+    else drv;
+in [
+# [
   # General packages for development and system management
   alacritty
+  # aider-chat-full
+  # goose-cli
   # aspell
   # aspellDicts.en
   bash-completion
   bat
   btop
   coreutils
+  # devenv - installed in darwin config (nixpkgs pkgs.devenv)
+  jetbrains-toolbox
+  # jdk
+  # jetbrains.jdk
+  opencode
+  claude-code
   tig
-  gitui
+  jujutsu
+  # gitui
   # ghostty - not building, using cask for now https://github.com/ghostty-org/ghostty/discussions/4786#discussioncomment-11766857
   killall
-  neofetch
+  fastfetch
   nushell
   openssh
+  # oxker
   sqlite
   wget
   zip
-  oxker
+  wireguard-go
+  wireguard-tools
+  mqttui
 
   # Encryption and security tools
   age
@@ -28,9 +59,10 @@ with pkgs; [
   libfido2
 
   # Cloud-related tools and SDKs
-  docker
-  docker-compose
-  colima
+  ansible
+  # colmena
+  # colima
+  # lima-additional-guestagents
   opentofu
   # texlive.combined.scheme-full
 
@@ -42,16 +74,18 @@ with pkgs; [
   font-awesome
   nerd-fonts.iosevka
   nerd-fonts."m+"
-  iosevka
+  # iosevka
   hack-font
   noto-fonts
-  noto-fonts-emoji
+  noto-fonts-color-emoji
+  nerd-fonts.terminess-ttf
+  terminus_font
+  scientifica
   meslo-lgs-nf
 
   # Node.js development tools
-  nodePackages.npm # globally install npm
-  nodePackages.prettier
-  nodejs
+  # nodePackages.npm # globally install npm
+  # nodePackages.prettier
 
   # Text and terminal utilities
   htop
@@ -63,15 +97,22 @@ with pkgs; [
   obsidian
   ripgrep
   tree
-  tmux
+  # tmux
   unrar
   unzip
+  nodejs
 
   # Python packages
   python3
   virtualenv
 
   # Music and entertainment
-  spotify
-  gimp
+  discord
+  slack
+  # (relocateDataDir "org.nixos.firefox" firefox)
+  # (relocateDataDir "org.nixos.librewolf" librewolf)
+  transmission_4-qt
+  # chromium
+
+  yt-dlp
 ]

@@ -57,15 +57,18 @@ in
   git = {
     enable = true;
     ignores = [ "*.swp" ];
-    userName = name;
-    userEmail = email;
-    lfs = {
-      enable = true;
+    signing = {
+      format = "openpgp";
     };
-    aliases = {
-      br = "for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(align:35)%(color:yellow)%(refname:short)%(color:reset)%(end) - %(color:red)%(objectname:short)%(color:reset) - %(align:40)%(contents:subject)%(end) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'";
-    };
-    extraConfig = {
+    settings = {
+      alias = {
+        br = "for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(align:35)%(color:yellow)%(refname:short)%(color:reset)%(end) - %(color:red)%(objectname:short)%(color:reset) - %(align:40)%(contents:subject)%(end) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'";
+      };
+      user = {
+        name = name;
+        email = email;
+      };
+
       init.defaultBranch = "main";
       core = {
 	    editor = "vim";
@@ -76,14 +79,132 @@ in
       rebase.autoStash = true;
       push.autoSetupRemote = true;
     };
-    delta = {
+    lfs = {
       enable = true;
-      options = {
-        side-by-side = true;
-        line-numbers = true;
-        syntax-theme = "Nord";
-        true-color = "always";
-      };
+    };
+  };
+
+
+# gtk-tabs-location = hidden
+# # font-family = "M+1Code Nerd Font"
+# # font-style = Semibold
+# # font-style-bold = Bold
+# # font-style-italic = Semibold Italic
+# # font-style-bold-italic = Extrabold Italic
+# # font-family = "M+1Code Nerd Font"
+# # font-style = Medium
+# font-family = "Iosevka Nerd Font"
+# font-style = Regular
+# font-style-bold = Bold
+# font-style-italic = Italic
+# font-style-bold-italic = Bold Italic
+# # font-style-bold = Bold
+# # font-style-italic = Italic
+# # font-style-bold-italic = Bold Italic
+# theme = nordfox
+# font-size = 14
+# scrollback-limit = 10_000
+# window-theme = ghostty
+# clipboard-read = allow
+# clipboard-paste-protection = false
+# window-decoration = false
+# shell-integration = zsh
+# macos-titlebar-style = hidden
+# macos-window-shadow = false
+# font-thicken = true
+# font-thicken-strength = 31
+#
+# # Transparency
+# background-opacity = 0.88
+# background-blur-radius = 0
+#
+# # Me 'umlauts with alt+u,a/o/u
+# # macos-option-as-alt = false
+# macos-option-as-alt = true
+#
+#
+# # Unbind to directly use these keys, otherwise they are bound to this (for compat reasons?):
+# # keybind = alt+left=esc:b
+# # keybind = alt+right=esc:f
+# keybind = alt+left=unbind
+# keybind = alt+right=unbind
+#
+# # If something doesn't work in Nvim / Zellij, try this first and _restart_ (Hot Reloading is dodgy for keybinds):
+# # keybind=clear
+#
+# command = /Users/linucc/.nix-profile/bin/zellij -l welcome
+
+  ghostty = {
+    enable = true;
+    package = null; # Broken on darwin
+    settings = {
+      font-family = "Iosevka Nerd Font";
+      # font-family = "M+1Code Nerd Font";
+      font-thicken-strength = 0;
+      font-size = 14;
+      font-style = "Regular";
+      font-style-bold = "Semibold";
+      font-style-italic = "Italic";
+      font-style-bold-italic = "Semibold Italic";
+
+
+      # font-family = "Iosevka Nerd Font";
+      # font-thicken-strength = 31;
+      # font-size = 14;
+      # font-style = "Semibold";
+      # font-style-bold = "Bold";
+      # font-style-italic = "Semibold Italic";
+      # font-style-bold-italic = "Extrabold Italic";
+
+      # font-family = "scientifica";
+      # font-size = 11;
+
+      # theme = "terafox";
+      theme = "duskfox";
+      scrollback-limit = 10000;
+      window-theme = "ghostty";
+      clipboard-read = "allow";
+      clipboard-paste-protection = false;
+      window-decoration = false;
+      shell-integration = "none";
+      macos-titlebar-style = "hidden";
+      macos-window-shadow = false;
+      font-thicken = true;
+
+      background-opacity = 0.9;
+      background-blur-radius = 0;
+
+      # Me 'umlauts with alt+u,a/o/u
+      # macos-option-as-alt = false
+      macos-option-as-alt = true;
+
+      # Unbind to directly use these keys, otherwise they are bound to this (for compat reasons?):
+      # # keybind = alt+left=esc:b
+      # # keybind = alt+right=esc:f
+      keybind = [
+        "alt+left=unbind"
+        "alt+right=unbind"
+      ];
+
+      # If something doesn't work in Nvim / Zellij, try this first and _restart_ (Hot Reloading is dodgy for keybinds):
+      # keybind=clear
+
+      custom-shader = [
+        # "~/.config/ghostty/shaders/cursor_blaze_nightfox.glsl"
+        # "~/.config/ghostty/shaders/glitchy_slow.glsl"
+      ];
+
+      command = "sh -c \"ghostty +boo; /Users/linucc/.nix-profile/bin/zellij -l welcome\"";
+    };
+  };
+
+  delta = {
+    enable = true;
+    options = {
+      side-by-side = true;
+      line-numbers = true;
+      syntax-theme = "Nord";
+      true-color = "always";
     };
   };
 
@@ -204,9 +325,23 @@ in
   zellij = {
     enable = true;
     settings = {
-      # theme = "terafox";
+      theme = "terafox";
       default_shell = "${pkgs.nushell}/bin/nu";
       mouse_mode = true;
+
+      session_serialization = true;
+      pane_viewport_serialization = true;
+      serialization_interval = 300;
+
+      # "keybinds" = {
+      #   locked = {
+      #     "bind \"Ctrl b\"" = {
+      #       SwitchToMode = {
+      #         _args = [ "normal" ];
+      #       };
+      #     };
+      #   };
+      # };
 
       # Mostly default "unlock-first" keybinds using Ctrl-b instead of Ctrl-g
       "keybinds clear-defaults=true" = {
@@ -564,22 +699,112 @@ in
         };
 
         session = {
-          "bind \"c\"" = {
-            LaunchOrFocusPlugin = [ "configuration" ];
-            SwitchToMode = [ "locked" ];
-          };
+          # "bind \"c\"" = {
+          #   LaunchOrFocusPlugin = [ "configuration" ];
+          #   SwitchToMode = [ "locked" ];
+          # };
           "bind \"d\"" = {
             Detach = { };
           };
           "bind \"o\"" = {
             SwitchToMode = [ "normal" ];
           };
-          "bind \"p\"" = {
-            LaunchOrFocusPlugin = [ "plugin-manager" ];
+          # "bind \"p\"" = {
+          #   LaunchOrFocusPlugin = [ "plugin-manager" ];
+          #   SwitchToMode = [ "locked" ];
+          # };
+          # "bind \"w\"" = {
+          #   LaunchOrFocusPlugin = [ "session-manager" ];
+          #   SwitchToMode = [ "locked" ];
+          # };
+        # bind "w" {
+        #     LaunchOrFocusPlugin "session-manager" {
+        #         floating true
+        #         move_to_focused_tab true
+        #     };
+        #     SwitchToMode "Normal"
+        # }
+        # bind "c" {
+        #     LaunchOrFocusPlugin "configuration" {
+        #         floating true
+        #         move_to_focused_tab true
+        #     };
+        #     SwitchToMode "Normal"
+        # }
+        # bind "p" {
+        #     LaunchOrFocusPlugin "plugin-manager" {
+        #         floating true
+        #         move_to_focused_tab true
+        #     };
+        #     SwitchToMode "Normal"
+        # }
+        # bind "a" {
+        #     LaunchOrFocusPlugin "zellij:about" {
+        #         floating true
+        #         move_to_focused_tab true
+        #     };
+        #     SwitchToMode "Normal"
+        # }
+        # bind "s" {
+        #     LaunchOrFocusPlugin "zellij:share" {
+        #         floating true
+        #         move_to_focused_tab true
+        #     };
+        #     SwitchToMode "Normal"
+        # }
+        # bind "l" {
+        #     LaunchOrFocusPlugin "zellij:layout-manager" {
+        #         floating true
+        #         move_to_focused_tab true
+        #     };
+        #     SwitchToMode "Normal"
+        # }
+          "bind \"w\"" = {
+            LaunchOrFocusPlugin = {
+              _args = [ "session-manager" ];
+              floating = true;
+              move_to_focused_tab = true;
+            };
             SwitchToMode = [ "locked" ];
           };
-          "bind \"w\"" = {
-            LaunchOrFocusPlugin = [ "session-manager" ];
+          "bind \"c\"" = {
+            LaunchOrFocusPlugin = {
+              _args = [ "configuration" ];
+              floating = true;
+              move_to_focused_tab = true;
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"p\"" = {
+            LaunchOrFocusPlugin = {
+              _args = [ "plugin-manager" ];
+              floating = true;
+              move_to_focused_tab = true;
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"a\"" = {
+            LaunchOrFocusPlugin = {
+              _args = [ "zellij:about" ];
+              floating = true;
+              move_to_focused_tab = true;
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"s\"" = {
+            LaunchOrFocusPlugin = {
+              _args = [ "zellij:share" ];
+              floating = true;
+              move_to_focused_tab = true;
+            };
+            SwitchToMode = [ "locked" ];
+          };
+          "bind \"l\"" = {
+            LaunchOrFocusPlugin = {
+              _args = [ "zellij:layout-manager" ];
+              floating = true;
+              move_to_focused_tab = true;
+            };
             SwitchToMode = [ "locked" ];
           };
         };
@@ -701,6 +926,18 @@ in
           };
         };
 
+        # "shared_except \"locked\" \"resize\" \"pane\" \"tab\" \"scroll\" \"entersearch\" \"renametab\" \"renamepane\"" = {
+        #   "bind \"e\"" = {
+        #     LaunchOrFocusPlugin = {
+        #       _args = [ "file:~/.config/zellij/plugins/zellij-choose-tree.wasm" ];
+        #       floating = true;
+        #       move_to_focused_tab = true;
+        #       show_plugins = false;
+        #     };
+        #     SwitchToMode = [ "locked" ];
+        #   };
+        # };
+
         "shared_among \"scroll\" \"search\"" = {
           "bind \"PageDown\"" = {
             PageScrollDown = { };
@@ -749,37 +986,45 @@ in
             HalfPageScrollUp = { };
           };
         };
-      };
 
-      entersearch = {
-        "bind \"Ctrl c\"" = {
-          SwitchToMode = [ "scroll" ];
+        entersearch = {
+          "bind \"Ctrl c\"" = {
+            SwitchToMode = [ "scroll" ];
+          };
+          "bind \"esc\"" = {
+            SwitchToMode = [ "scroll" ];
+          };
+          "bind \"enter\"" = {
+            SwitchToMode = [ "search" ];
+          };
         };
-        "bind \"esc\"" = {
-          SwitchToMode = [ "scroll" ];
-        };
-        "bind \"enter\"" = {
-          SwitchToMode = [ "search" ];
-        };
-      };
 
-      renametab = {
-        "bind \"esc\"" = {
-          UndoRenameTab = { };
-          SwitchToMode = [ "tab" ];
-        };
-      };
+      # bind "s" { LaunchOrFocusPlugin "file:~/.config/zellij/plugins/zellij-choose-tree.wasm" {
+      #         floating true
+      #         move_to_focused_tab true
+      #         show_plugins false
+      #     }; SwitchToMode "Locked";
+        # }
 
-      "shared_among \"renametab\" \"renamepane\"" = {
-        "bind \"Ctrl c\"" = {
-          SwitchToMode = [ "locked" ];
-        };
-      };
 
-      renamepane = {
-        "bind \"esc\"" = {
-          UndoRenamePane = { };
-          SwitchToMode = [ "pane" ];
+        renametab = {
+          "bind \"esc\"" = {
+            UndoRenameTab = { };
+            SwitchToMode = [ "tab" ];
+          };
+        };
+
+        "shared_among \"renametab\" \"renamepane\"" = {
+          "bind \"Ctrl c\"" = {
+            SwitchToMode = [ "locked" ];
+          };
+        };
+
+        renamepane = {
+          "bind \"esc\"" = {
+            UndoRenamePane = { };
+            SwitchToMode = [ "pane" ];
+          };
         };
       };
     };
@@ -865,6 +1110,7 @@ in
         $env.PATH | prepend [
           $"($env.HOME)/.nix-profile/bin"
           $"/etc/profiles/per-user/($env.USER)/bin"
+          "/run/current-system/sw/bin"
       ] | append [
         "/nix/var/nix/profiles/default/bin"
       ])
@@ -961,282 +1207,313 @@ in
     settings = {
       add_newline = true;
 
-   format = ''$shell[](#5E81AC)$os$username[](bg:#81A1C1 fg:#5E81AC)$directory[](fg:#81A1C1 bg:#88C0D0)$git_branch$git_status[](fg:#88C0D0 bg:#8FBCBB)$c$elixir$elm$golang$gradle$haskell$java$julia$nodejs$nim$rust$scala[](fg:#8FBCBB bg:#A3BE8C)$docker_context[](fg:#A3BE8C) '';
+      format = ''$shell[](#4d7d90)$os$username[](bg:#73a3b7 fg:#4d7d90)$directory[](fg:#73a3b7 bg:#8eb2af)$c$elixir$elm$golang$gradle$haskell$java$julia$nodejs$nim$rust$scala[](fg:#8eb2af bg:#ebcb8b)''${custom.jj}[](fg:#ebcb8b bg:#fda47f)$docker_context[](fg:#fda47f) '';
 
-    right_format = ''[](fg:#EBCB8B)$time[](fg:#EBCB8B)'';
+# symbol = ""
+# style = "bg:color_aqua"
+# format = '[[ $symbol $output ](fg:color_fg0 bg:color_aqua)]($style)'
+# when = "jj-starship detect"
+# shell = ["jj-starship", "--no-color", "--no-symbol", "--no-jj-prefix", "--no-git-prefix"]
+
+
+# command = 'jj-starship '
+# when = "test -d .jj"
+# shell = ["sh"]
+# format = "[](fg:overlay)[[ $output ](bg:overlay)]($style)[](fg:overlay)"
+# style = "bg:overlay fg:rose"
+      custom = {
+        jj = {
+          symbol = "";
+          style = "bg:#ebcb8b";
+          format = "[[$symbol $output](fg:#2F3239 bg:#ebcb8b)]($style)";
+          when = "jj-starship detect";
+          # shell = ["jj-starship" "--no-symbol" "--no-color"];
+          shell = ["sh" "-c" "jj-starship --no-symbol | sed 's/\\x1b\\[0m//g'"];
+          # format = "[[ $symbol ](fg:#2F3239)[ $change_id ](fg:#ad5c7c)[ $bookmarks ](fg:#2F3239)[ \$status ](fg:#ff8349)](bg:#8eb2af)";
+          #format = "(fg:#73a3b7 bg:#8eb2af){symbol}{change_id} ({bookmarks}) [{status}]";
+        };
+      };
+
+          # style = "bg:#ad5c7c fg:#2F3239";
+          # bash_indicator = "[   bsh ](fg:#ebcb8b)";
+          # zsh_indicator = "[   zsh ](fg:#a3be8c)";
+          # nu_indicator = "[   nu ](fg:#ad5c7c)";
+
+      right_format = ''[](fg:#ff8349)$time[](fg:#ff8349)'';
  
-   username = {
-     show_always = true;
-     style_user = "bg:#5E81AC";
-     style_root = "bg:#5E81AC";
-     format = "[$user ]($style)";
-     disabled = false;
-   };
- 
-   os = {
-     style = "bg:#5E81AC fg:#2E3440";
-     # disabled = true; # Disabled by default
-   };
- 
-   directory = {
-     style = "bg:#81A1C1 fg:#2E3440";
-     format = "[ $path ]($style)";
-     truncation_length = 3;
-     truncation_symbol = "…/";
-     substitutions = {
-       "Documents" = "󰈙 ";
-       "Downloads" = " ";
-       "Music" = " ";
-       "Pictures" = " ";
-     };
-   };
- 
-   c = {
-     symbol = " ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   docker_context = {
-     symbol = " ";
-     style = "bg:#A3BE8C fg:#2E3440";
-     format = "[ $symbol $context ]($style)";
-   };
- 
-   elixir = {
-     symbol = " ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   elm = {
-     symbol = " ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   git_branch = {
-     symbol = "";
-     style = "bg:#88C0D0 fg:#2E3440";
-     format = "[ $symbol $branch ]($style)";
-   };
- 
-   git_status = {
-     style = "bg:#88C0D0 fg:#2E3440";
-     format = "[$all_status$ahead_behind ]($style)";
-   };
- 
-   golang = {
-     symbol = " ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   gradle = {
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   haskell = {
-     symbol = " ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   java = {
-     symbol = " ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   julia = {
-     symbol = " ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   nodejs = {
-     symbol = "";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   nim = {
-     symbol = "󰆥 ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
+      username = {
+        show_always = true;
+        style_user = "bg:#4d7d90";
+        style_root = "bg:#4d7d90";
+        format = "[$user ]($style)";
+        disabled = false;
+      };
       
-   nix_shell = {
-     symbol = "󱄅 ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol  $name ($state) ]($style)";
-   };
- 
-   rust = {
-     symbol = "";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
- 
-   scala = {
-     symbol = " ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol ($version) ]($style)";
-   };
+      os = {
+        style = "bg:#4d7d90 fg:#2F3239";
+        # disabled = true; # Disabled by default
+      };
+    
+      directory = {
+        style = "bg:#73a3b7 fg:#2F3239";
+        format = "[ $path ]($style)";
+        truncation_length = 3;
+        truncation_symbol = "…/";
+        substitutions = {
+          "Documents" = "󰈙 ";
+          "Downloads" = " ";
+          "Music" = " ";
+          "Pictures" = " ";
+        };
+      };
+    
+      c = {
+        symbol = " ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      docker_context = {
+        symbol = " ";
+        style = "bg:#fda47f fg:#2F3239";
+        format = "[ $symbol $context ]($style)";
+      };
+    
+      elixir = {
+        symbol = " ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      elm = {
+        symbol = " ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      git_branch = {
+        symbol = "";
+        style = "bg:#8eb2af fg:#2F3239";
+        format = "[ $symbol $branch ]($style)";
+      };
+    
+      git_status = {
+        style = "bg:#8eb2af fg:#2F3239";
+        format = "[$all_status$ahead_behind ]($style)";
+      };
+    
+      golang = {
+        symbol = " ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      gradle = {
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      haskell = {
+        symbol = " ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      java = {
+        symbol = " ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      julia = {
+        symbol = " ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      nodejs = {
+        symbol = "";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      nim = {
+        symbol = "󰆥 ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+          
+      nix_shell = {
+        symbol = "󱄅 ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol  $name ($state) ]($style)";
+      };
+    
+      rust = {
+        symbol = "";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
+    
+      scala = {
+        symbol = " ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol ($version) ]($style)";
+      };
 
-   shell = {
-      disabled = false;
-      # style = "bg:#B48EAD fg:#2E3440";
-      bash_indicator = "[   bsh ](fg:#ebcb8b)";
-      zsh_indicator = "[   zsh ](fg:#a3be8c)";
-      nu_indicator = "[   nu ](fg:#b48ead)";
-      format = "$indicator";
-   };
+      shell = {
+          disabled = false;
+          # style = "bg:#ad5c7c fg:#2F3239";
+          bash_indicator = "[   bsh ](fg:#ebcb8b)";
+          zsh_indicator = "[   zsh ](fg:#a3be8c)";
+          nu_indicator = "[   nu ](fg:#ad5c7c)";
+          format = "$indicator";
+      };
 
-   terraform = {
-     symbol = " ";
-     style = "bg:#8FBCBB fg:#2E3440";
-     format = "[ $symbol $workspace ($version) ]($style)";
-   };
- 
-   time = {
-     disabled = false;
-     time_format = "%R"; # Hour:Minute Format
-     style = "bg:#EBCB8B fg:#2E3440";
-     format = "[ 󱑏 $time ]($style)";
-   };
-     };
-   };
-
-  ssh = {
-    enable = true;
-    includes = [
-      (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-        "/home/${user}/.ssh/config_external"
-      )
-      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-        "/Users/${user}/.ssh/config_external"
-      )
-    ];
-    matchBlocks = {
-      "github.com" = {
-        identitiesOnly = true;
-        identityFile = [
-          (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-	    # Hopefully this doesnt fuck up the secrets handling...
-            # "/home/${user}/.ssh/id_github"
-            "/home/${user}/.ssh/id_rsa_yubikey.pub"
-          )
-          (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-            # "/Users/${user}/.ssh/id_github"
-            "/Users/${user}/.ssh/id_rsa_yubikey.pub"
-          )
-        ];
+      terraform = {
+        symbol = " ";
+        style = "bg:#7aa4a1 fg:#2F3239";
+        format = "[ $symbol $workspace ($version) ]($style)";
+      };
+    
+      time = {
+        disabled = false;
+        time_format = "%R"; # Hour:Minute Format
+        style = "bg:#ff8349 fg:#2F3239";
+        format = "[ 󱑏 $time ]($style)";
       };
     };
   };
 
-  tmux = {
+  ssh = {
     enable = true;
-    plugins = with pkgs.tmuxPlugins; [
-      vim-tmux-navigator
-      fingers
-      # https://github.com/nix-community/home-manager/issues/5952
-      # sensible
-      yank
-      prefix-highlight
-      nord
-      # {
-      #   plugin = resurrect; # Used by tmux-continuum
-      #
-      #   # Use XDG data directory
-      #   # https://github.com/tmux-plugins/tmux-resurrect/issues/348
-      #   extraConfig = ''
-      #     set -g @resurrect-dir '$HOME/.cache/tmux/resurrect'
-      #     set -g @resurrect-capture-pane-contents 'on'
-      #     set -g @resurrect-pane-contents-area 'visible'
-      #   '';
-      # }
-      # {
-      #   plugin = continuum;
-      #   extraConfig = ''
-      #     set -g @continuum-restore 'on'
-      #     set -g @continuum-save-interval '5' # minutes
-      #   '';
-      # }
-    ];
-    terminal = "tmux-256color";
-    tmuxinator.enable = true;
-    prefix = "C-b";
-    escapeTime = 10;
-    clock24 = true;
-    historyLimit = 50000;
-    shell = "${pkgs.nushell}/bin/nu";
-    sensibleOnTop = false;
-    baseIndex = 1;
-    extraConfig = ''
+    enableDefaultConfig = false;
+    includes = [ "~/.ssh/config_external" ];
+    settings = {
+      "github.com" = {
+        IdentitiesOnly = true;
+        # Yubikey-backed; gpg-agent provides the private half.
+        IdentityFile = "~/.ssh/id_rsa_yubikey.pub";
+      };
 
-      # Remove Vim mode delays
-      set -g focus-events on
-
-      # Enable full mouse support
-      set -g mouse on
-
-      # -----------------------------------------------------------------------------
-      # Key bindings
-      # -----------------------------------------------------------------------------
-
-      # C-a for nested tmux sessions
-      bind-key -n C-a send-prefix
-
-      # Split panes, vertical or horizontal
-      bind-key x split-window -v
-      bind-key v split-window -h
-
-      # Move around panes with vim-like bindings (h,j,k,l)
-      bind-key -n M-k select-pane -U
-      bind-key -n M-h select-pane -L
-      bind-key -n M-j select-pane -D
-      bind-key -n M-l select-pane -R
-
-      # Move around panes with vim-like bindings (h,j,k,l) with prefix - useful for nested tmux sessions
-      bind-key k select-pane -U
-      bind-key h select-pane -L
-      bind-key j select-pane -D
-      bind-key l select-pane -R
-
-      # Smart pane switching with awareness of Vim splits.
-      # This is copy paste from https://github.com/christoomey/vim-tmux-navigator
-      # is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-      #   | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
-      # bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
-      # bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
-      # bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
-      # bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
-      # tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
-      # if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
-      #   "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
-      # if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
-      #   "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
-
-      bind-key -T copy-mode-vi 'C-h' select-pane -L
-      set-option -g status-justify "centre"
-
-      bind-key -T copy-mode-vi 'C-j' select-pane -D
-      bind-key -T copy-mode-vi 'C-k' select-pane -U
-      bind-key -T copy-mode-vi 'C-l' select-pane -R
-      bind-key -T copy-mode-vi 'C-\' select-pane -l
-
-      set-option -g pane-border-lines "heavy"
-      set-option -g pane-active-border-style "fg=#ff8349"
-
-      # Some BS around https://github.com/nix-community/home-manager/issues/5952
-      set -gu default-command
-      set -g default-shell "${pkgs.nushell}/bin/nu"
-
-      # Colored Nvim inside Tmux
-      set -ag terminal-overrides ",xterm-256color:RGB"
-      '';
+      # Carried over verbatim from the removed `enableDefaultConfig` defaults so
+      # the generated config does not change. Safe to trim later: every value
+      # below already matches an OpenSSH built-in default.
+      "*" = {
+        ForwardAgent = false;
+        AddKeysToAgent = "no";
+        Compression = false;
+        ServerAliveInterval = 0;
+        ServerAliveCountMax = 3;
+        HashKnownHosts = false;
+        UserKnownHostsFile = "~/.ssh/known_hosts";
+        ControlMaster = "no";
+        ControlPath = "~/.ssh/master-%r@%n:%p";
+        ControlPersist = "no";
+      };
     };
+  };
+
+  # tmux = {
+  #   enable = true;
+  #   plugins = with pkgs.tmuxPlugins; [
+  #     vim-tmux-navigator
+  #     fingers
+  #     # https://github.com/nix-community/home-manager/issues/5952
+  #     # sensible
+  #     yank
+  #     prefix-highlight
+  #     nord
+  #     # {
+  #     #   plugin = resurrect; # Used by tmux-continuum
+  #     #
+  #     #   # Use XDG data directory
+  #     #   # https://github.com/tmux-plugins/tmux-resurrect/issues/348
+  #     #   extraConfig = ''
+  #     #     set -g @resurrect-dir '$HOME/.cache/tmux/resurrect'
+  #     #     set -g @resurrect-capture-pane-contents 'on'
+  #     #     set -g @resurrect-pane-contents-area 'visible'
+  #     #   '';
+  #     # }
+  #     # {
+  #     #   plugin = continuum;
+  #     #   extraConfig = ''
+  #     #     set -g @continuum-restore 'on'
+  #     #     set -g @continuum-save-interval '5' # minutes
+  #     #   '';
+  #     # }
+  #   ];
+  #   terminal = "tmux-256color";
+  #   tmuxinator.enable = true;
+  #   prefix = "C-b";
+  #   escapeTime = 10;
+  #   clock24 = true;
+  #   historyLimit = 50000;
+  #   shell = "${pkgs.nushell}/bin/nu";
+  #   sensibleOnTop = false;
+  #   baseIndex = 1;
+  #   extraConfig = ''
+  #
+  #     # Remove Vim mode delays
+  #     set -g focus-events on
+  #
+  #     # Enable full mouse support
+  #     set -g mouse on
+  #
+  #     # -----------------------------------------------------------------------------
+  #     # Key bindings
+  #     # -----------------------------------------------------------------------------
+  #
+  #     # C-a for nested tmux sessions
+  #     bind-key -n C-a send-prefix
+  #
+  #     # Split panes, vertical or horizontal
+  #     bind-key x split-window -v
+  #     bind-key v split-window -h
+  #
+  #     # Move around panes with vim-like bindings (h,j,k,l)
+  #     bind-key -n M-k select-pane -U
+  #     bind-key -n M-h select-pane -L
+  #     bind-key -n M-j select-pane -D
+  #     bind-key -n M-l select-pane -R
+  #
+  #     # Move around panes with vim-like bindings (h,j,k,l) with prefix - useful for nested tmux sessions
+  #     bind-key k select-pane -U
+  #     bind-key h select-pane -L
+  #     bind-key j select-pane -D
+  #     bind-key l select-pane -R
+  #
+  #     # Smart pane switching with awareness of Vim splits.
+  #     # This is copy paste from https://github.com/christoomey/vim-tmux-navigator
+  #     # is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+  #     #   | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+  #     # bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
+  #     # bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
+  #     # bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
+  #     # bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
+  #     # tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
+  #     # if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
+  #     #   "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+  #     # if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
+  #     #   "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+  #
+  #     bind-key -T copy-mode-vi 'C-h' select-pane -L
+  #     set-option -g status-justify "centre"
+  #
+  #     bind-key -T copy-mode-vi 'C-j' select-pane -D
+  #     bind-key -T copy-mode-vi 'C-k' select-pane -U
+  #     bind-key -T copy-mode-vi 'C-l' select-pane -R
+  #     bind-key -T copy-mode-vi 'C-\' select-pane -l
+  #
+  #     set-option -g pane-border-lines "heavy"
+  #     set-option -g pane-active-border-style "fg=#ff8349"
+  #
+  #     # Some BS around https://github.com/nix-community/home-manager/issues/5952
+  #     set -gu default-command
+  #     set -g default-shell "${pkgs.nushell}/bin/nu"
+  #
+  #     # Colored Nvim inside Tmux
+  #     set -ag terminal-overrides ",xterm-256color:RGB"
+  #     '';
+  #   };
 }

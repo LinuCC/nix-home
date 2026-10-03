@@ -2,13 +2,24 @@
   description = "Starter Configuration with secrets for MacOS and NixOS";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "https://github.com/NixOS/nixpkgs/archive/6e76ab58ba9f30f77f8276a7474cea9d2d8956fd.tar.gz";
+    # fixedNushellPkgs.url = "https://github.com/NixOS/nixpkgs/archive/6e76ab58ba9f30f77f8276a7474cea9d2d8956fd.tar.gz";
+    # fixedNushellPkgs = {
+    #   url = "https://github.com/NixOS/nixpkgs/archive/6e76ab58ba9f30f77f8276a7474cea9d2d8956fd.tar.gz";
+    #   sha256 = "sha256:1j35y9r955ya9hamwwq7hgz7v94ky9x4d954hy6xxhx59bzd09j9";
+    # };
     agenix.url = "github:ryantm/agenix";
     home-manager.url = "github:nix-community/home-manager";
-    stylix.url = "github:danth/stylix";
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # colmena.url = "github:zhaofengli/colmena";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    jj-starship.url = "github:dmmulroy/jj-starship";
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
     };
@@ -29,8 +40,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     astro-nvim = {
-      url = "github:LinuCC/dotvim/main";
-      # url = "git+file:///Users/linucc/code/nix/dotvim/";
+      # url = "github:LinuCC/dotvim/main";
+      url = "git+file:///Users/linucc/code/nix/astro-nvim/?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # secrets = {
@@ -38,7 +49,7 @@
     #   flake = false;
     # };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, astro-nvim, stylix } @inputs:
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, jj-starship, nixpkgs, disko, agenix, astro-nvim, stylix } @inputs:
     let
       user = "linucc";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -106,6 +117,10 @@
                 autoMigrate = true;
               };
             }
+            ({pkgs, ...}: {
+              nixpkgs.overlays = [ jj-starship.overlays.default ];
+              environment.systemPackages = [ pkgs.jj-starship ];
+            })
             ./hosts/darwin
           ];
         }

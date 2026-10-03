@@ -14,7 +14,7 @@ def create_right_prompt [] {
     $time_segment
 }
 
-# Use nushell functions to define your right and left prompt
+# Use nushell functions to define your right and left prom/Users/linucc/.miyo/binpt
 $env.PROMPT_COMMAND = { create_left_prompt }
 $env.PROMPT_COMMAND_RIGHT = { create_right_prompt }
 
@@ -69,8 +69,9 @@ $env.PATH = (
       "/opt/homebrew/opt/fzf/bin"
       $"($env.HOME)/.cargo/bin"
       $"($env.HOME)/bin"
+      $"($env.HOME)/.miyo/bin"
       "/usr/local/bin"
       $"($env.HOME)/.dotnet/tools"
+      $"/Applications/Nix Apps/Obsidian.app/Contents/MacOS"
     ] | flatten
 )
-

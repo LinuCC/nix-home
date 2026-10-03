@@ -4,6 +4,10 @@ with pkgs;
 let shared-packages = import ../shared/packages.nix { inherit pkgs; }; in
 shared-packages ++ [
 
+  # Docker (not in shared packages; macOS uses OrbStack instead)
+  docker
+  docker-compose
+
   # Security and authentication
   yubikey-agent
   keepassxc

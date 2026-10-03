@@ -1,0 +1,24 @@
+#!/usr/bin/env nu
+
+let layouts_dir = "/Users/linucc/code/projects/zellij/layouts"
+
+# Get all .kdl files in the layouts directory
+let files = (ls $layouts_dir | where name =~ '\.kdl$' | get name | path basename)
+
+if ($files | is-empty) {
+    print "No .kdl layout files found in the layouts directory."
+    exit 1
+}
+
+# Interactive selection with arrow keys
+let selected_file = ($files | input list --fuzzy "Select a layout:")
+
+if ($selected_file | is-empty) {
+    print "No layout selected."
+    exit 1
+}
+
+let layout_path = $"($layouts_dir)/($selected_file)"
+
+print $"Opening layout: ($selected_file)"
+zellij action new-tab --layout $layout_path

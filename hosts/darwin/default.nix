@@ -1,4 +1,4 @@
-{ agenix, config, pkgs, self, ... }:
+{ agenix, config, pkgs, self, lib, ... }:
 
 let 
   user = "linucc"; 
@@ -767,6 +767,99 @@ let
               --set time "''${TIME[@]}" 
   '';
 
+  sketchybar-item-notifications = pkgs.writeScript "sketchybar-item-notifications.sh" ''
+    #!/usr/bin/env bash
+
+    # Source required files for colors and fonts
+    # source "$HOME/conf/sketchybar/colors.sh"
+    # source "$HOME/conf/sketchybar/icons.sh"
+
+    # Get all visible apps from dock dynamically
+    get_apps_from_dock() {
+        osascript -e "tell application \"System Events\"
+            get name of every process whose visible is true
+        end tell" 2>/dev/null
+    }
+
+    # Simple AppleScript function to get badge count for any app
+    check_app_badge() {
+        local app_name="$1"
+        osascript -e "tell application \"System Events\" to tell process \"Dock\" to try
+            return value of attribute \"AXStatusLabel\" of UI element \"$app_name\" of list 1
+        on error
+            return 0
+        end try" 2>/dev/null
+    }
+
+    # Get all visible apps dynamically and parse correctly
+    APPS_STRING=$(get_apps_from_dock)
+    IFS=',' read -r -a APPS <<< "$APPS_STRING"
+
+    # Remove the single leading space
+    for i in "''${!APPS[@]}"; do
+        APPS[$i]="''${APPS[''$i]# }"
+    done
+
+    # Track if we have any notifications
+    HAS_NOTIFICATIONS=false
+    NOTIFICATION_COUNT=0
+
+    # Check all apps using AppleScript
+    for app in "''${APPS[@]}"; do
+        BADGE=$(check_app_badge "$app")
+
+        # Handle all badge types: numbers ("1"), bullet ("•"), and missing value
+        if [ -n "$BADGE" ] && [ "$BADGE" != "0" ] && [ "$BADGE" != "missing value" ]; then
+            HAS_NOTIFICATIONS=true
+            NOTIFICATION_COUNT=$((NOTIFICATION_COUNT + 1))
+
+            # Create a clean identifier for the item
+            app_id=$(echo "$app" | tr '[:upper:]' '[:lower:]' | tr ' ' '_')
+
+            # Get appropriate icon for the app
+            icon=$(icon_map "$app")
+
+            # Add the notification item
+            sketchybar --add item "notif.$app_id" right \
+                --set "notif.$app_id" \
+                    icon="$icon" \
+                    icon.font="$NERD_FONT:Bold:30.0" \
+                    icon.color="$(get_color WHITE 100)" \
+                    label="$BADGE" \
+                    label.color="$(get_color RED 100)" \
+                    label.font="$FONT:Bold:14.0" \
+                    background.color="$(get_color RED 30)" \
+                    background.corner_radius=10 \
+                    background.height=24 \
+                    icon.padding_left=6 \
+                    icon.padding_right=-6 \
+                    padding_left=0 \
+                    padding_right=4 \
+                    click_script="open -a '$app'" \
+                    position=right
+        else
+            # Remove the item if it exists and no notifications
+            app_id=$(echo "$app" | tr '[:upper:]' '[:lower:]' | tr ' ' '_')
+            sketchybar --remove "notif.$app_id" 2>/dev/null
+        fi
+    done
+
+    # Update the anchor icon based on whether we have notifications
+    if [ "$HAS_NOTIFICATIONS" = true ]; then
+        # Show notification icon with accent color when there are notifications
+        sketchybar --add item "notif.main" right \
+            icon="󰂚" \
+            icon.color="$(get_color GREY 100)" \
+            background.color="$(get_color YELLOW 40)"
+    else
+        # Show dimmed icon when no notifications
+        sketchybar --add item "notif.main" right \
+            icon="󰂜" \
+            icon.color="$(get_color GREY 50)" \
+            background.color="$(get_color GREY 20)"
+    fi
+  '';
+
   sketchybar-item-wifi = pkgs.writeScript "sketchybar-item-wifi.sh" ''
     #!/bin/bash
       WIFI=(
@@ -781,6 +874,78 @@ let
     sketchybar --add item wifi right   \
               --set wifi "''${WIFI[@]}" \
               --subscribe wifi wifi_change
+  '';
+
+  sketchybar-util-colors = pkgs.writeScript "sketchybar-util-colors.sh" ''
+#!/usr/bin/env sh
+
+# Font definitions
+FONT="SF Pro"
+NERD_FONT="Hack Nerd Font Mono"
+
+colors=(
+    # Color Palette
+    BLACK=0xff1a1a1a
+    ASH=0xff3b3b3b
+    GREY=0xff8f8f8f
+    WHITE=0xffe6e6e6
+    RED=0xffd1001f
+    GREEN=0xff57c900
+    LIME=0xffa3b500
+    DARK_GREEN=0xff2c6600
+    BLUE=0xff0043c9
+    LIGHT_BLUE=0xff8aadf4
+    YELLOW=0xffccb802
+    LIGHT_YELLOW=0xffeed49f
+    PURPLE=0xff7402cc
+    ORANGE=0xffd44a00
+    MAGENTA=0xffc6a0f6
+    SKY=0xff91d7e3
+
+
+    TRANSPARENT=0x00000000
+    TEXT=0xffcee0d2
+
+    SPOTIFY_GREEN=0xffa6da95
+)
+
+get_color() {
+    local COLOR="$1"
+    local OPACITY="''${2:-}"   # optional, if omitted return full color
+
+    # find the color value
+    local val=""
+    for entry in "''${colors[@]}"; do
+        IFS='=' read -r name value <<< "$entry"
+        if [ "$name" = "$COLOR" ]; then
+            val="$value"
+            break
+        fi
+    done
+
+    if [ -z "$val" ]; then
+        echo "Color $COLOR not found" >&2
+        return 1
+    fi
+
+    # If no opacity specified, return the full color
+    if [ -z "$OPACITY" ]; then
+        echo "$val"
+        return 0
+    fi
+
+    local hexdec=$(( (OPACITY * 255 + 50) / 100 ))
+    # Format to two uppercase hex digits
+    local hex="''${hexdec#0x}"   # not strictly needed, just to be safe
+    printf -v hex "%02X" "$hexdec"
+
+    # Drop "0x" prefix, drop the first two hex digits (the AA), keep the rest
+    # val is "0xAARRGGBB" so:
+    local rgb="''${val:4}"   # this removes "0xAA" → gives "RRGGBB"
+
+    # Construct new color
+    echo "0x''${hex}''${rgb}"
+}
   '';
 
   terafox-base-16 = self + "/configs/base-16-terafox.yaml";
@@ -799,6 +964,7 @@ in
   stylix = {
     enable = true;
     base16Scheme = terafox-base-16;
+    # base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
     image = pkgs.fetchurl {
       url = "https://w.wallhaven.cc/full/kx/wallhaven-kxpk21.png";
       sha256 = "sha256-H0WV67iBDPGbuylcdnxfmsKk2qA/LIGDG13TgPDLwkc=";
@@ -811,10 +977,10 @@ in
       gaps = {
         inner.horizontal = 6;
         inner.vertical = 6;
-        outer.top = [{ monitor.built-in = 4; } 36 ];
-        outer.left = 6;
-        outer.bottom = 6;
-        outer.right = 6;
+        outer.top = [{ monitor.built-in = 4; } 4 ];
+        outer.left = 4;
+        outer.bottom = 4;
+        outer.right = 4;
       };
       exec-on-workspace-change = [
         "/bin/bash"
@@ -842,12 +1008,27 @@ in
         "10" = 1;
         "Q" = 3;
         "W" = 3;
-        "E" = 3;
-        "R" = 3;
-        "T" = 3;
+        # "E" = 3;
+        # "R" = 3;
+        # "T" = 3;
         "Y" = 3;
         # "P" = 3; Allow moving til soft-assign implemented
       };
+      # on-window-detected = [
+      #   {
+      #     "if" = {
+      #     # firefox
+      #       app-id = "org.mozilla.firefox";
+      #     };
+      #     run = "move-node-to-workspace 1";
+      #   }
+      #   {
+      #     "if" = {
+      #       app-id = "org.ghostery.ghostty";
+      #     };
+      #     run = "move-node-to-workspace 2";
+      #   }
+      # ];
       mode.main.binding = {
         alt-slash = "layout tiles horizontal vertical";
         alt-comma = "layout accordion horizontal vertical";
@@ -967,7 +1148,7 @@ in
     };
   };
 
-  services.jankyborders = {
+  services.jankyborders = lib.mkForce {
     enable = true;
     width = 3.0;
     active_color = "0xFFff8349";
@@ -977,79 +1158,81 @@ in
     order = "above"; # https://github.com/FelixKratz/JankyBorders/issues/37
   };
 
-  services.sketchybar = {
-    enable = true;
-
-    config = ''
-#!/bin/bash
-
-ITEM_DIR="$DIR/items"
-
-FONT="Iosevka Nerd Font"
-ICON_FONT="sketchybar-app-font"
-
-PADDING=6
-
-source "${sketchybar-colors}"
-source "${sketchybar-icons}"
-
-BAR_PROPS=(
-  height=28
-  color=$BG_PRI_COLR
-  shadow=off
-  position=top
-  sticky=on
-  padding_right=15
-  padding_left=15
-  corner_radius=10
-  y_offset=4
-  margin=6
-  blur_radius=30
-  notch_width=0
-)
-
-DEF_PROPS=(
-  updates=when_shown
-  icon.font="$ICON_FONT:Regular:16.0"
-  icon.color=$WHITE
-  icon.padding_left=10
-  icon.padding_right=2
-  label.font="$FONT:Bold:14.0"
-  label.color=$WHITE
-  label.padding_left=$PADDING
-  label.padding_right=10
-  background.color=$BG_PRI_COLOR
-  background.padding_right=$PADDING
-  background.padding_left=$PADDING
-  background.height=22
-  background.corner_radius=8
-)
-
-sketchybar --bar "''${BAR_PROPS[@]}"
-sketchybar --default "''${DEF_PROPS[@]}"
-
-# -- LEFT Side Items --
-source "${sketchybar-item-apple}"
-source "${sketchybar-item-spaces}"
-source "${sketchybar-item-front-app}"
-
-# -- RIGHT Side Items -- 
-source "${sketchybar-item-time}"
-source "${sketchybar-item-battery}"
-source "${sketchybar-item-sound}"
-source "${sketchybar-item-wifi}"
-source "${sketchybar-item-cpu}"
-sketchybar --add item cat center \
-           --set cat icon="(ﾉ◕ヮ◕)ﾉ*:・✧ﾟ"\
-                     icon.font="$ICON_FONT:Regular:18.0" \
-                     icon.color=$DARK_WHITE\
-                     label.draw=off
-           # --set cat icon="≽^•⩊•^≼"\
-
-##### Force all scripts to run the first time (never do this in a script) #####
-sketchybar --update
-    '';
-  };
+#   services.sketchybar = {
+#     enable = true;
+#
+#     config = ''
+# #!/bin/bash
+#
+# ITEM_DIR="$DIR/items"
+#
+# FONT="Iosevka Nerd Font"
+# ICON_FONT="sketchybar-app-font"
+#
+# PADDING=6
+#
+# source "${sketchybar-colors}"
+# source "${sketchybar-util-colors}"
+# source "${sketchybar-icons}"
+#
+# BAR_PROPS=(
+#   height=28
+#   color=$BG_PRI_COLR
+#   shadow=off
+#   position=top
+#   sticky=on
+#   padding_right=15
+#   padding_left=15
+#   corner_radius=10
+#   y_offset=4
+#   margin=6
+#   blur_radius=30
+#   notch_width=0
+# )
+#
+# DEF_PROPS=(
+#   updates=when_shown
+#   icon.font="$ICON_FONT:Regular:16.0"
+#   icon.color=$WHITE
+#   icon.padding_left=10
+#   icon.padding_right=2
+#   label.font="$FONT:Bold:14.0"
+#   label.color=$WHITE
+#   label.padding_left=$PADDING
+#   label.padding_right=10
+#   background.color=$BG_PRI_COLOR
+#   background.padding_right=$PADDING
+#   background.padding_left=$PADDING
+#   background.height=22
+#   background.corner_radius=8
+# )
+#
+# sketchybar --bar "''${BAR_PROPS[@]}"
+# sketchybar --default "''${DEF_PROPS[@]}"
+#
+# # -- LEFT Side Items --
+# source "${sketchybar-item-apple}"
+# source "${sketchybar-item-spaces}"
+# source "${sketchybar-item-front-app}"
+#
+# # -- RIGHT Side Items -- 
+# source "${sketchybar-item-time}"
+# source "${sketchybar-item-battery}"
+# source "${sketchybar-item-sound}"
+# source "${sketchybar-item-wifi}"
+# source "${sketchybar-item-cpu}"
+# source "${sketchybar-item-notifications}"
+# sketchybar --add item cat center \
+#            --set cat icon="(ﾉ◕ヮ◕)ﾉ*:・✧ﾟ"\
+#                      icon.font="$ICON_FONT:Regular:18.0" \
+#                      icon.color=$DARK_WHITE\
+#                      label.draw=off
+#            # --set cat icon="≽^•⩊•^≼"\
+#
+# ##### Force all scripts to run the first time (never do this in a script) #####
+# sketchybar --update
+#     '';
+#   };
 
   ids.gids.nixbld = 350;
 
@@ -1074,6 +1257,19 @@ sketchybar --update
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+
+    # OrbStack NixOS VM as remote builder for aarch64-linux builds
+    distributedBuilds = true;
+    buildMachines = [{
+      hostName = "nixos.orb.local";
+      systems = [ "aarch64-linux" "x86_64-linux" ];
+      maxJobs = 4;
+      speedFactor = 1;
+      sshUser = "root";
+      sshKey = "/Users/linucc/.ssh/nix-builder";
+      protocol = "ssh-ng";
+      supportedFeatures = [ "benchmark" "big-parallel" ];
+    }];
   };
 
   # Turn off NIX_PATH warnings now that we're using flakes
@@ -1082,14 +1278,15 @@ sketchybar --update
   # Load configuration that is shared across systems
   environment.systemPackages = with pkgs; [
   #   emacs-unstable
-    agenix.packages."${pkgs.system}".default
+    agenix.packages."${pkgs.stdenv.hostPlatform.system}".default
+    devenv
   ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
 
   astroNvim = {
     username = "linucc";
     nerdfont = "Iosevka";
-    nodePackage = pkgs.nodejs_20;
-    pythonPackage = pkgs.python311Full;
+    nodePackage = pkgs.nodejs;
+    pythonPackage = pkgs.python3;
   };
 
   # launchd.user.agents.emacs.path = [ config.environment.systemPath ];
@@ -1105,6 +1302,7 @@ sketchybar --update
   # };
 
   system = {
+    primaryUser = "linucc";
     stateVersion = 4;
 
     defaults = {

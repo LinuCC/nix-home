@@ -1,0 +1,21 @@
+#!/usr/bin/env nu
+
+# Opens Chromium/Chrome with remote debugging enabled
+
+if (sys host | get name) == "Darwin" {
+    # macOS - use Chrome or Chromium
+    let chrome_path = if ("/Applications/Google Chrome.app" | path exists) {
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    } else if ("/Applications/Chromium.app" | path exists) {
+        "/Applications/Chromium.app/Contents/MacOS/Chromium"
+    } else {
+        print "Error: Chrome or Chromium not found in /Applications"
+        exit 1
+    }
+
+    ^$chrome_path --remote-debugging-port=9222
+} else {
+    print "This script is only supported on macOS"
+    exit 1
+}
+

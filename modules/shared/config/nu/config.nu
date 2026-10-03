@@ -166,6 +166,66 @@ let light_theme = {
     shape_variable: purple
 }
 
+# Terafox theme from nightfox.nvim
+# https://github.com/EdenEast/nightfox.nvim
+let terafox_theme = {
+    # color for nushell primitives
+    separator: "#6d7f8b"
+    leading_trailing_space_bg: "#254147"
+    header: "#cbd9d8"
+    empty: "#5a93aa"
+    bool: "#ff9664"
+    int: "#ff8349"
+    filesize: "#ff8349"
+    duration: "#7aa4a1"
+    date: "#7aa4a1"
+    range: "#ebebeb"
+    float: "#ff8349"
+    string: "#7aa4a1"
+    nothing: "#ebebeb"
+    binary: "#ff8349"
+    cellpath: "#ebebeb"
+    row_index: "#587b7b"
+    record: "#ebebeb"
+    list: "#cbd9d8"
+    block: "#cbd9d8"
+    hints: "#587b7b"
+    search_result: { fg: "#152528" bg: "#7aa4a1" }  # used by `input list --fuzzy`
+
+    # shapes (syntax highlighting)
+    shape_and: { fg: "#ad5c7c" attr: b }
+    shape_binary: { fg: "#ff8349" attr: b }
+    shape_block: "#cbd9d8"
+    shape_bool: "#ff9664"
+    shape_custom: { fg: "#7aa4a1" attr: b }
+    shape_datetime: { fg: "#7aa4a1" attr: b }
+    shape_directory: "#ebebeb"
+    shape_external: "#ad5c7c"
+    shape_externalarg: "#ebebeb"
+    shape_filepath: "#ebebeb"
+    shape_flag: "#a1cdd8"
+    shape_float: "#ff8349"
+    shape_garbage: { fg: "#FFFFFF" bg: "#FF0000" attr: b }
+    shape_globpattern: "#fdb292"
+    shape_int: "#ff8349"
+    shape_internalcall: "#ad5c7c"
+    shape_list: "#cbd9d8"
+    shape_literal: "#7aa4a1"
+    shape_matching_brackets: { attr: u }
+    shape_nothing: "#afd4de"
+    shape_operator: "#cbd9d8"
+    shape_or: { fg: "#ad5c7c" attr: b }
+    shape_pipe: { fg: "#ad5c7c" attr: b }
+    shape_range: { fg: "#ebebeb" attr: b }
+    shape_record: "#cbd9d8"
+    shape_redirection: { fg: "#ad5c7c" attr: b }
+    shape_signature: { fg: "#7aa4a1" attr: b }
+    shape_string: "#7aa4a1"
+    shape_string_interpolation: "#fdb292"
+    shape_table: "#cbd9d8"
+    shape_variable: "#ebebeb"
+}
+
 
 # $env.PATH = (
 #     $env.PATH | append [
@@ -329,7 +389,7 @@ $env.config = {
     vi_insert: block # block, underscore, line (block is the default)
     vi_normal: underscore # block, underscore, line  (underscore is the default)
   }
-  # color_config: $dark_theme   # if you want a light theme, replace `$dark_theme` to `$light_theme`
+  color_config: $terafox_theme   # options: $dark_theme, $light_theme, $terafox_theme
   footer_mode: 25 # always, never, number_of_rows, auto
   float_precision: 2 # the precision for displaying floats in tables
   # buffer_editor: "emacs" # command that will be used to edit the current line buffer with ctrl+o, if unset fallback to $env.EDITOR and $env.VISUAL
@@ -617,3 +677,131 @@ $env.GPG_TTY = $"(tty)"
 $env.SSH_AUTH_SOCK = $"(gpgconf --list-dirs agent-ssh-socket)"
 gpgconf --launch gpg-agent
 gpg-connect-agent updatestartuptty /bye > /dev/null
+
+def --env enable-ping [threshold_ms: int = 10_000] {
+    # 1. Define the logic as a closure
+    let ping_code = {
+        let duration = ($env.CMD_DURATION_MS? | default 0 | into int)
+        if $duration > $threshold_ms {
+            job spawn {
+              afplay /System/Library/Sounds/Morse.aiff
+            }
+            print $"(ansi g)Done! (ansi reset)Took ($duration)ms"
+        }
+    }
+
+    # 2. Deep merge the hook into the existing config
+    $env.config = ($env.config | merge {
+        hooks: {
+            # Note: 0.110.0 often uses 'display_output' or 'pre_prompt' 
+            # as the reliable hook points. We'll use 'pre_prompt' here 
+            # because it triggers right after a command finishes.
+            pre_prompt: [ $ping_code ]
+        }
+    })
+
+    print $"Ping enabled for commands > ($threshold_ms)ms"
+}
+
+
+
+
+
+
+# devenv hook for nushell
+#
+# Loaded automatically (no config.nu edit needed) when devenv is installed via
+# Nix, which ships this under $nu.vendor-autoload-dirs. If you're running a
+# devenv build that didn't install it there, add it to your own autoload dir:
+#   mkdir ($nu.default-config-dir | path join autoload)
+#   devenv hook nu | save --force ($nu.default-config-dir | path join autoload/devenv-hook.nu)
+
+# The project dir we last auto-activated. Lets you `exit` a devenv shell back to
+# the parent shell without it immediately re-spawning; cleared once you cd
+# elsewhere. `devenv hook-should-activate` is cheap (static binary), so apart
+# from this guard the hook runs it every prompt — no result caching, so
+# `devenv allow`/`revoke` take effect on the next prompt without a re-`cd`.
+$env._DEVENV_HOOK_ACTIVATED = ""
+# Last directory reported as untrusted, so the "not allowed" hint is shown once
+# per entry rather than on every prompt.
+$env._DEVENV_HOOK_UNTRUSTED = ""
+
+# `_DEVENV_HOOK_DIR` marks the one shell process the hook itself spawned;
+# it gates the cd-out `exit` so externally-set `DEVENV_ROOT` (e.g. via
+# direnv) does not close the user's terminal. Capture it into a plain
+# variable, then remove it from `$env` so it cannot leak into further
+# descendants (a new tmux/zellij pane, a manually started nested
+# shell, ...) started from this shell later on — those would otherwise
+# inherit it, wrongly conclude they too are hook-spawned, and `exit` on
+# cd-out with nothing around to catch them.
+let _devenv_hook_dir = ("_DEVENV_HOOK_DIR" in $env)
+hide-env -i _DEVENV_HOOK_DIR
+
+def --env _devenv_hook [] {
+    if ("DEVENV_ROOT" in $env) {
+        if $_devenv_hook_dir {
+            if not ($env.PWD == $env.DEVENV_ROOT or ($env.PWD | str starts-with ($env.DEVENV_ROOT + "/"))) {
+                $env.PWD | save --force ($env.DEVENV_ROOT + "/.devenv/exit-dir")
+                # `exit` throws ShellError::Exit, which is only handled at the
+                # REPL top level; from inside a hook nushell reports
+                # "Exit doesn't catch internally" and the shell survives.
+                # Signal ourselves instead so the process really terminates.
+                ^kill $nu.pid
+            }
+        }
+        return
+    }
+
+    # Just exited the devenv shell for this dir — don't re-spawn until you leave.
+    if ($env._DEVENV_HOOK_ACTIVATED == $env.PWD) {
+        return
+    }
+    $env._DEVENV_HOOK_ACTIVATED = ""
+
+    let result = (^devenv hook-should-activate | complete)
+    let retrying = ($env._DEVENV_HOOK_UNTRUSTED == $env.PWD)
+    if not $retrying and ($result.stderr | str trim) != "" {
+        print -e $result.stderr
+    }
+
+    if $result.exit_code == 0 {
+        let dir = ($result.stdout | str trim)
+        if $dir != "" {
+            $env._DEVENV_HOOK_UNTRUSTED = ""
+            # Mark activated before launching so exiting the shell doesn't re-launch.
+            $env._DEVENV_HOOK_ACTIVATED = $env.PWD
+            # `try`: a hook-spawned shell that leaves the project terminates
+            # itself with a signal, so `devenv shell` exits 128+SIGTERM. Without
+            # `try` nushell aborts the hook on that non-zero exit and never
+            # follows the user to `exit-dir` below.
+            try {
+                with-env { _DEVENV_HOOK_DIR: $dir, _DEVENV_CALLER: "hook", _DEVENV_SHELL_HINT: "nu" } { do { ^devenv shell } }
+            }
+            let exit_dir_file = ($dir + "/.devenv/exit-dir")
+            if ($exit_dir_file | path exists) {
+                let target_dir = (open $exit_dir_file | str trim)
+                rm -f $exit_dir_file
+                if ($target_dir | path exists) {
+                    cd $target_dir
+                    # We followed the user out, so the "don't re-spawn" guard
+                    # above no longer applies: it only exists for exiting the
+                    # shell and staying put. Leaving it set to the project dir
+                    # would silently skip activation the next time the user
+                    # cd's back in.
+                    $env._DEVENV_HOOK_ACTIVATED = ""
+                }
+            }
+        } else {
+            $env._DEVENV_HOOK_UNTRUSTED = ""
+        }
+    } else {
+        $env._DEVENV_HOOK_UNTRUSTED = $env.PWD
+    }
+}
+
+# Run on every prompt. hook-should-activate is cheap, so there's no separate
+# env_change/PWD trigger or trust-DB stamp: each prompt re-checks, which makes
+# `devenv allow`/`revoke` (and out-of-tree bindings) take effect immediately.
+$env.config = ($env.config | upsert hooks.pre_prompt (
+    ($env.config | get -o hooks.pre_prompt | default []) | append {|| _devenv_hook }
+))
