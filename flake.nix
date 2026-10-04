@@ -44,12 +44,19 @@
       url = "git+file:///Users/linucc/code/nix/astro-nvim/?ref=main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Upstream nightfox ships per-flavor exports under extra/<flavor>/:
+    # base16.yaml (stylix scheme), <flavor>.ghostty, <flavor>.nu, and one
+    # extra/zellij/nightfox.kdl holding every flavor.
+    nightfox = {
+      url = "github:EdenEast/nightfox.nvim";
+      flake = false;
+    };
     # secrets = {
     #   url = "git+ssh://git@github.com/linucc/nix-secrets.git";
     #   flake = false;
     # };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, jj-starship, nixpkgs, disko, agenix, astro-nvim, stylix } @inputs:
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, jj-starship, nixpkgs, disko, agenix, astro-nvim, stylix, nightfox } @inputs:
     let
       user = "linucc";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -136,6 +143,10 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              # modules/nixos/home-manager.nix is imported as an HM module, so it
+              # gets HM's module args rather than specialArgs — forward the flake
+              # inputs so `nightfox` resolves there too.
+              extraSpecialArgs = inputs;
               users.${user} = import ./modules/nixos/home-manager.nix;
             };
           }

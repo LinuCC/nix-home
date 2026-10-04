@@ -1,4 +1,4 @@
-{ agenix, config, pkgs, self, lib, ... }:
+{ agenix, config, pkgs, self, lib, nightfox, ... }:
 
 let 
   user = "linucc"; 
@@ -948,8 +948,10 @@ get_color() {
 }
   '';
 
-  terafox-base-16 = self + "/configs/base-16-terafox.yaml";
-  catpuccin-mocca-base-16 = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+  # The one knob for theming: terafox | nordfox | duskfox.
+  # Everything else derives from it, home-manager included (which reads the
+  # name back out of the palette as config.lib.stylix.colors.scheme).
+  flavor = "duskfox";
 in
 
 {
@@ -963,8 +965,8 @@ in
 
   stylix = {
     enable = true;
-    base16Scheme = terafox-base-16;
-    # base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
+    base16Scheme = "${nightfox}/extra/${flavor}/base16.yaml";
+    opacity.terminal = 0.75;
     image = pkgs.fetchurl {
       url = "https://w.wallhaven.cc/full/kx/wallhaven-kxpk21.png";
       sha256 = "sha256-H0WV67iBDPGbuylcdnxfmsKk2qA/LIGDG13TgPDLwkc=";
@@ -1148,11 +1150,9 @@ in
     };
   };
 
-  services.jankyborders = lib.mkForce {
+  services.jankyborders = {
     enable = true;
     width = 3.0;
-    active_color = "0xFFff8349";
-    inactive_color = "0xFF152528";
     hidpi = true;
     style = "rounded";
     order = "above"; # https://github.com/FelixKratz/JankyBorders/issues/37

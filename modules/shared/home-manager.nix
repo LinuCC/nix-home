@@ -1,8 +1,11 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, nightfox, ... }:
 
 let name = "LinuCC";
     user = "linucc";
-    email = "linucc@linu.cc"; 
+    email = "linucc@linu.cc";
+    # terafox | nordfox | duskfox. Set once in hosts/darwin/default.nix and read
+    # back here out of the generated palette, so there is no second knob.
+    flavor = config.lib.stylix.colors.scheme;
 in
 {
   # Shared shell configuration
@@ -159,8 +162,9 @@ in
       # font-family = "scientifica";
       # font-size = 11;
 
-      # theme = "terafox";
-      theme = "duskfox";
+      # Theme file is installed by modules/shared/files.nix from the nightfox
+      # export for this flavor.
+      theme = flavor;
       scrollback-limit = 10000;
       window-theme = "ghostty";
       clipboard-read = "allow";
@@ -171,8 +175,9 @@ in
       macos-window-shadow = false;
       font-thicken = true;
 
-      background-opacity = 0.9;
-      background-blur-radius = 0;
+      # Single source for the transparency: stylix.opacity.terminal.
+      background-opacity = config.stylix.opacity.terminal;
+      background-blur = if config.stylix.opacity.terminal < 0.851 then 4 else 0;
 
       # Me 'umlauts with alt+u,a/o/u
       # macos-option-as-alt = false
@@ -322,10 +327,16 @@ in
       '';
      };
 
+  # Enabled as home-manager modules (rather than bare packages) purely so the
+  # stylix targets for them apply. No further config needed.
+  bat.enable = true;
+  btop.enable = true;
+  fzf.enable = true;
+
   zellij = {
     enable = true;
     settings = {
-      theme = "terafox";
+      theme = flavor;
       default_shell = "${pkgs.nushell}/bin/nu";
       mouse_mode = true;
 
@@ -1115,11 +1126,15 @@ in
         "/nix/var/nix/profiles/default/bin"
       ])
     '';
+    # extraConfig is appended after configFile.text by the home-manager nushell
+    # module, so assigning color_config here wins over config.nu.
     extraConfig = ''
       $env.PATH = ($env.PATH | 
       split row (char esep) |
       append /usr/bin/env
       )
+      source ${nightfox}/extra/${flavor}/${flavor}.nu
+      $env.config.color_config = ${"$" + flavor + "_theme"}
       ''; 
   # + ''
       #     export-env {
@@ -1207,7 +1222,16 @@ in
     settings = {
       add_newline = true;
 
-      format = ''$shell[](#4d7d90)$os$username[](bg:#73a3b7 fg:#4d7d90)$directory[](fg:#73a3b7 bg:#8eb2af)$c$elixir$elm$golang$gradle$haskell$java$julia$nodejs$nim$rust$scala[](fg:#8eb2af bg:#ebcb8b)''${custom.jj}[](fg:#ebcb8b bg:#fda47f)$docker_context[](fg:#fda47f) '';
+      # Palette names below resolve through here, so the whole prompt follows the
+      # stylix flavor instead of carrying literal hex.
+      palette = "nightfox";
+      # Starship lowercases a style's color token before looking it up in the palette
+      palettes.nightfox = lib.mapAttrs' (n: v: lib.nameValuePair (lib.toLower n) v) (
+        lib.filterAttrs (n: _: builtins.match "base[0-9A-F][0-9A-F]" n != null)
+          config.lib.stylix.colors.withHashtag
+      );
+
+      format = ''$shell[](base0d)$os$username[](bg:base0c fg:base0d)$directory[](fg:base0c bg:base0b)$c$elixir$elm$golang$gradle$haskell$java$julia$nodejs$nim$rust$scala[](fg:base0b bg:base0a)''${custom.jj}[](fg:base0a bg:base09)$docker_context[](fg:base09) '';
 
 # symbol = ""
 # style = "bg:color_aqua"
@@ -1224,38 +1248,38 @@ in
       custom = {
         jj = {
           symbol = "";
-          style = "bg:#ebcb8b";
-          format = "[[$symbol $output](fg:#2F3239 bg:#ebcb8b)]($style)";
+          style = "bg:base0a";
+          format = "[[$symbol $output](fg:base00 bg:base0a)]($style)";
           when = "jj-starship detect";
           # shell = ["jj-starship" "--no-symbol" "--no-color"];
           shell = ["sh" "-c" "jj-starship --no-symbol | sed 's/\\x1b\\[0m//g'"];
-          # format = "[[ $symbol ](fg:#2F3239)[ $change_id ](fg:#ad5c7c)[ $bookmarks ](fg:#2F3239)[ \$status ](fg:#ff8349)](bg:#8eb2af)";
-          #format = "(fg:#73a3b7 bg:#8eb2af){symbol}{change_id} ({bookmarks}) [{status}]";
+          # format = "[[ $symbol ](fg:base00)[ $change_id ](fg:base0e)[ $bookmarks ](fg:base00)[ \$status ](fg:base09)](bg:base0b)";
+          #format = "(fg:base0c bg:base0b){symbol}{change_id} ({bookmarks}) [{status}]";
         };
       };
 
-          # style = "bg:#ad5c7c fg:#2F3239";
-          # bash_indicator = "[   bsh ](fg:#ebcb8b)";
-          # zsh_indicator = "[   zsh ](fg:#a3be8c)";
-          # nu_indicator = "[   nu ](fg:#ad5c7c)";
+          # style = "bg:base0e fg:base00";
+          # bash_indicator = "[   bsh ](fg:base0a)";
+          # zsh_indicator = "[   zsh ](fg:base0b)";
+          # nu_indicator = "[   nu ](fg:base0e)";
 
-      right_format = ''[](fg:#ff8349)$time[](fg:#ff8349)'';
+      right_format = ''[](fg:base09)$time[](fg:base09)'';
  
       username = {
         show_always = true;
-        style_user = "bg:#4d7d90";
-        style_root = "bg:#4d7d90";
+        style_user = "bg:base0d";
+        style_root = "bg:base0d";
         format = "[$user ]($style)";
         disabled = false;
       };
       
       os = {
-        style = "bg:#4d7d90 fg:#2F3239";
+        style = "bg:base0d fg:base00";
         # disabled = true; # Disabled by default
       };
     
       directory = {
-        style = "bg:#73a3b7 fg:#2F3239";
+        style = "bg:base0c fg:base00";
         format = "[ $path ]($style)";
         truncation_length = 3;
         truncation_symbol = "…/";
@@ -1269,117 +1293,117 @@ in
     
       c = {
         symbol = " ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       docker_context = {
         symbol = " ";
-        style = "bg:#fda47f fg:#2F3239";
+        style = "bg:base09 fg:base00";
         format = "[ $symbol $context ]($style)";
       };
     
       elixir = {
         symbol = " ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       elm = {
         symbol = " ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       git_branch = {
         symbol = "";
-        style = "bg:#8eb2af fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol $branch ]($style)";
       };
     
       git_status = {
-        style = "bg:#8eb2af fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[$all_status$ahead_behind ]($style)";
       };
     
       golang = {
         symbol = " ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       gradle = {
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       haskell = {
         symbol = " ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       java = {
         symbol = " ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       julia = {
         symbol = " ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       nodejs = {
         symbol = "";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       nim = {
         symbol = "󰆥 ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
           
       nix_shell = {
         symbol = "󱄅 ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol  $name ($state) ]($style)";
       };
     
       rust = {
         symbol = "";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
     
       scala = {
         symbol = " ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol ($version) ]($style)";
       };
 
       shell = {
           disabled = false;
-          # style = "bg:#ad5c7c fg:#2F3239";
-          bash_indicator = "[   bsh ](fg:#ebcb8b)";
-          zsh_indicator = "[   zsh ](fg:#a3be8c)";
-          nu_indicator = "[   nu ](fg:#ad5c7c)";
+          # style = "bg:base0e fg:base00";
+          bash_indicator = "[   bsh ](fg:base0a)";
+          zsh_indicator = "[   zsh ](fg:base0b)";
+          nu_indicator = "[   nu ](fg:base0e)";
           format = "$indicator";
       };
 
       terraform = {
         symbol = " ";
-        style = "bg:#7aa4a1 fg:#2F3239";
+        style = "bg:base0b fg:base00";
         format = "[ $symbol $workspace ($version) ]($style)";
       };
     
       time = {
         disabled = false;
         time_format = "%R"; # Hour:Minute Format
-        style = "bg:#ff8349 fg:#2F3239";
+        style = "bg:base09 fg:base00";
         format = "[ 󱑏 $time ]($style)";
       };
     };

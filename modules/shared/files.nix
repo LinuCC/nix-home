@@ -1,11 +1,27 @@
-{ pkgs, config, user, ... }:
+{ pkgs, config, user, nightfox, ... }:
 
 # let
 #  githubPublicKey = "ssh-ed25519 AAAA...";
 # in
 let
-  xdg_configHome = "${config.users.users.${user}.home}/.config"; in
+  xdg_configHome = "${config.users.users.${user}.home}/.config";
+  # Read the flavor back out of the palette so there is still only one knob
+  # (set in hosts/darwin/default.nix).
+  flavor = config.lib.stylix.colors.scheme;
+in
 {
+
+  # Upstream-authored ghostty theme for the selected flavor, referenced by
+  # `theme = <flavor>` in modules/shared/home-manager.nix.
+  "${xdg_configHome}/ghostty/themes/${flavor}" = {
+    source = "${nightfox}/extra/${flavor}/${flavor}.ghostty";
+  };
+
+  # One file carries every nightfox flavor under `themes { ... }`, so this does
+  # not need to change when the flavor does.
+  "${xdg_configHome}/zellij/themes/nightfox.kdl" = {
+    source = "${nightfox}/extra/zellij/nightfox.kdl";
+  };
 
   # "${xdg_configHome}/ghostty/config" = {
   #   source = ./config/ghostty/config;

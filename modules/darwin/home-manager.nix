@@ -1,4 +1,4 @@
-{ config, pkgs, lib, home-manager, ... }:
+{ config, pkgs, lib, home-manager, nightfox, ... }:
 
 let
   user = "linucc";
@@ -7,7 +7,7 @@ let
   #   #!/bin/sh
   #   emacsclient -c -n &
   # '';
-  sharedFiles = import ../shared/files.nix { inherit config pkgs user; };
+  sharedFiles = import ../shared/files.nix { inherit config pkgs user nightfox; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
 in
 {
@@ -65,9 +65,36 @@ in
 
       stylix = {
         enable = true;
-        # rofi is unused here (and X11-only); the target only exists to emit a
-        # renamed-option warning. Upstream fix: nix-community/stylix#2501.
-        targets.rofi.enable = false;
+        # Stylix targets gate only on `stylix.enable && target.enable` — never on
+        # `programs.<x>.enable` — so every hm.nix target loads on macOS. Most are
+        # inert because they only write into `programs.<x>.settings` for modules
+        # that are off. These are the ones that write files or flip another
+        # module's enable regardless of platform:
+        targets = {
+          # X11-only, and sets the renamed `programs.rofi.font`.
+          # Upstream fix: nix-community/stylix#2501.
+          rofi.enable = false;
+          # Sets `gtk.enable = true` unconditionally, pulling adw-gtk3 into the closure.
+          gtk.enable = false;
+          # Writes ~/.Xresources plus an xrdb onChange activation script.
+          x11.enable = false;
+          # These write xdg.configFile/xdg.dataFile unconditionally, at Linux paths.
+          gdu.enable = false;
+          forge.enable = false;
+          gedit.enable = false;
+          gtksourceview.enable = false;
+          blender.enable = false;
+
+          # Owned by hand instead, using the nightfox exports — see
+          # modules/shared/home-manager.nix. Left on, stylix would define the
+          # same options and collide.
+          ghostty.enable = false;
+          starship.enable = false;
+          # Also writes $env.config.color_config into nushell's extraConfig.
+          # Both assignments would land in the same file and the winner would be
+          # decided by merge order, so turn stylix's off explicitly.
+          nushell.enable = false;
+        };
       };
 
       home = {
@@ -81,7 +108,7 @@ in
 
         stateVersion = "23.11";
       };
-      programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
+      programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib nightfox; };
 
       # Marked broken Oct 20, 2022 check later to remove this
       # https://github.com/nix-community/home-manager/issues/3344

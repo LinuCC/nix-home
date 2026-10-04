@@ -1,10 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, nightfox, ... }:
 
 let
   user = "linucc";
   xdg_configHome  = "/home/${user}/.config";
-  shared-programs = import ../shared/home-manager.nix { inherit config pkgs lib; };
-  shared-files = import ../shared/files.nix { inherit config pkgs; };
+  shared-programs = import ../shared/home-manager.nix { inherit config pkgs lib nightfox; };
+  shared-files = import ../shared/files.nix { inherit config pkgs nightfox; };
 
   polybar-user_modules = builtins.readFile (pkgs.replaceVars {
     src = ./config/polybar/user_modules.ini;

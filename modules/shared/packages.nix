@@ -27,8 +27,6 @@ in [
   # aspell
   # aspellDicts.en
   bash-completion
-  bat
-  btop
   coreutils
   # devenv - installed in darwin config (nixpkgs pkgs.devenv)
   jetbrains-toolbox
