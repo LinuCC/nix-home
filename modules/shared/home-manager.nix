@@ -167,6 +167,7 @@ in
       theme = flavor;
       scrollback-limit = 10000;
       window-theme = "ghostty";
+      minimum-contrast = 1.2;
       clipboard-read = "allow";
       clipboard-paste-protection = false;
       window-decoration = false;
@@ -1231,7 +1232,7 @@ in
           config.lib.stylix.colors.withHashtag
       );
 
-      format = ''$shell[](base0d)$os$username[](bg:base0c fg:base0d)$directory[](fg:base0c bg:base0b)$c$elixir$elm$golang$gradle$haskell$java$julia$nodejs$nim$rust$scala[](fg:base0b bg:base0a)''${custom.jj}[](fg:base0a bg:base09)$docker_context[](fg:base09) '';
+      format = ''$shell[](base0d)$os$username[](bg:base0c fg:base0d)$directory[](fg:base0c bg:base0b)$c$elixir$elm$golang$gradle$haskell$java$julia$nodejs$nim$rust$scala[](fg:base0b bg:base03)''${custom.jj}[](fg:base03 bg:base09)$docker_context[](fg:base09) '';
 
 # symbol = ""
 # style = "bg:color_aqua"
@@ -1248,8 +1249,10 @@ in
       custom = {
         jj = {
           symbol = "";
-          style = "bg:base0a";
-          format = "[[$symbol $output](fg:base00 bg:base0a)]($style)";
+          # Dark background: jj-starship colors its parts with the terminal's (stylix) accent
+          # colors, which are light pastels and unreadable on a light segment
+          style = "bg:base03";
+          format = "[[$symbol $output](fg:base05 bg:base03)]($style)";
           when = "jj-starship detect";
           # shell = ["jj-starship" "--no-symbol" "--no-color"];
           shell = ["sh" "-c" "jj-starship --no-symbol | sed 's/\\x1b\\[0m//g'"];
