@@ -26,9 +26,6 @@ in map mkGreedy [
   # "betterdisplay"
   # "parallels" # Does not work right now, manually installed
 
-  # Entertainment Tools
-  "font-sketchybar-app-font"
-
   # Productivity Tools
   "raycast"
 

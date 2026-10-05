@@ -59,9 +59,7 @@ in
     useGlobalPkgs = true;
     backupFileExtension = "backup";
     users.${user} = { pkgs, config, lib, ... }:{
-      imports = [
-        ../../modules/darwin/sketchybar/sketchybar.nix
-      ];
+      imports = [ ./sketchybar ];
 
       stylix = {
         enable = true;
@@ -108,6 +106,7 @@ in
 
         stateVersion = "23.11";
       };
+
       programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib nightfox; };
 
       # Marked broken Oct 20, 2022 check later to remove this

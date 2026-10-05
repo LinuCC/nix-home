@@ -1,7 +1,0 @@
-require("items.apple")
-require("items.workspaces")
-require("items.utils")
-require("items.media")
-require("items.calendar")
-require("items.battery")
-require("items.sound")
